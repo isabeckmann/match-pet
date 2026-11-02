@@ -1,0 +1,16 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Fredoka Variable", system-ui, sans-serif;
+  --color-primary: #ff6f5e;
+  --color-primary-dark: #c0392b;
+  --color-ink: #1f3d2b;
+  --color-tag: #6fafa3;
+  --color-emphasis: #ffc857;
+  --color-cream: #fffbf5;
+}
+
+body {
+  background-color: var(--color-cream);
+  color: var(--color-ink);
+}
