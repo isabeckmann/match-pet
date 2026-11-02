@@ -171,7 +171,6 @@ src/
 
 ## Equipe
 
-- Nome 1
-- Nome 2
-- Nome 3
-- Nome 4
+- Isadora Beckmann
+- Julia Picinini
+- Luiza Graminho
