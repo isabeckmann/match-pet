@@ -14,3 +14,7 @@ body {
   background-color: var(--color-cream);
   color: var(--color-ink);
 }
+:focus-visible {
+  outline: 3px solid var(--color-ink);
+  outline-offset: 2px;
+}
