@@ -12,3 +12,34 @@ export const GoogleIcon = () => (
     <path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.5-5.8c-2.1 1.4-4.8 2.3-8.4 2.3-6.3 0-11.6-4.1-13.5-9.8l-7.9 6.1C6.5 42.6 14.6 48 24 48Z" />
   </svg>
 );
+
+// ---- Ícones da tela Descobrir / Navbar (aceitam size e className) ----
+type IconProps = { size?: number; className?: string };
+const sv = ({ size = 20, className }: IconProps) => ({ ...base, width: size, height: size, className });
+
+export const SearchIcon = (p: IconProps) => (<svg {...sv(p)}><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></svg>);
+export const HeartIcon = (p: IconProps) => (
+  <svg {...sv(p)}><path d="M12 21s-7.5-4.6-9.5-9.2C1.2 8.6 3 5 6.5 5c2 0 3.5 1.1 5.5 3.2C14 6.1 15.5 5 17.5 5c3.5 0 5.3 3.6 4 6.8C19.5 16.4 12 21 12 21Z" /></svg>
+);
+export const CalendarIcon = (p: IconProps) => (<svg {...sv(p)}><rect x="3" y="5" width="18" height="16" rx="3" /><path d="M8 3v4M16 3v4M3 10h18" /></svg>);
+export const LogoutIcon = (p: IconProps) => (<svg {...sv(p)}><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><path d="m16 17 5-5-5-5M21 12H9" /></svg>);
+export const ChevronDownIcon = (p: IconProps) => (<svg {...sv(p)}><path d="m6 9 6 6 6-6" /></svg>);
+export const PinIcon = (p: IconProps) => (<svg {...sv(p)}><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21Z" /><circle cx="12" cy="9.5" r="2.5" /></svg>);
+export const CakeIcon = (p: IconProps) => (
+  <svg {...sv(p)}><rect x="4" y="12" width="16" height="8" rx="2" /><path d="M4 16c2 1.5 4 1.5 6 0s4-1.5 6 0 3 1 4 0M12 12V9M12 3.5c1 1.2 1 2.2 0 3-1-.8-1-1.8 0-3Z" /></svg>
+);
+export const PawIcon = (p: IconProps) => (
+  <svg {...sv(p)} fill="currentColor" stroke="none">
+    <ellipse cx="12" cy="16" rx="5.2" ry="4.2" />
+    <ellipse cx="5" cy="11" rx="2" ry="2.8" />
+    <ellipse cx="9" cy="6.5" rx="2" ry="2.8" />
+    <ellipse cx="15" cy="6.5" rx="2" ry="2.8" />
+    <ellipse cx="19" cy="11" rx="2" ry="2.8" />
+  </svg>
+);
+// Três "raios" que saem do título; use className="-scale-x-100" para espelhar
+export const Sparks = ({ className }: { className?: string }) => (
+  <svg aria-hidden="true" viewBox="0 0 40 52" width="40" height="52" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" className={className}>
+    <path d="M18 12 6 4M16 26H2M18 40 6 48" />
+  </svg>
+);
