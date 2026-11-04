@@ -8,6 +8,10 @@
   --color-tag: #6fafa3;
   --color-emphasis: #ffc857;
   --color-cream: #fffbf5;
+  --color-peach: #fdebdc;
+  --color-coral: #e5533d; /* coral com contraste 3:1+ sobre o pêssego (texto grande) */
+  --color-sage: #d5e3c6;
+  --color-hill: #b8c99d;
 }
 
 body {
@@ -17,4 +21,52 @@ body {
 :focus-visible {
   outline: 3px solid var(--color-ink);
   outline-offset: 2px;
+}
+
+/* ---------- Animações da tela Descobrir ---------- */
+@keyframes card-enter {
+  from { opacity: 0; transform: translateX(80px) scale(0.9); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes paw-step {
+  0% { opacity: 0; scale: 0.5; }
+  25% { opacity: 0.85; scale: 1; }
+  100% { opacity: 0; scale: 0.9; }
+}
+@keyframes float-up {
+  0% { opacity: 0; transform: translateY(0) rotate(0deg); }
+  12% { opacity: 0.9; }
+  100% { opacity: 0; transform: translateY(-115vh) rotate(var(--rot)); }
+}
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes panel-in {
+  from { opacity: 0; transform: translateY(16px) scale(0.96); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes heart-pop {
+  0% { transform: scale(0); }
+  60% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+@keyframes heart-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.14); }
+}
+@keyframes ring {
+  from { transform: scale(0.8); opacity: 0.5; }
+  to { transform: scale(2.2); opacity: 0; }
+}
+
+.anim-card-enter { animation: card-enter 0.4s ease-out; }
+.anim-paw-step { animation: paw-step 0.7s ease-out both; }
+.anim-float { animation: float-up var(--dur) linear var(--delay) infinite both; }
+.anim-fade { animation: fade-in 0.4s ease-out both; }
+.anim-panel { animation: panel-in 0.4s ease-out 0.15s both; }
+.anim-pop { animation: heart-pop 0.6s ease-out 0.2s both; }
+.anim-pulse { animation: heart-pulse 1.2s ease-in-out 0.8s infinite; }
+.anim-ring { animation: ring 1.6s ease-out 0.8s infinite; }
+
+/* Quem prefere menos movimento vê tudo no estado final, sem animar */
+@media (prefers-reduced-motion: reduce) {
+  [class*="anim-"] { animation: none !important; }
 }
