@@ -91,10 +91,50 @@ export default function RegisterPet() {
       const pet = await registerPet(data);
       setStatus({ ok: true, text: `${pet.name} foi cadastrado e já aparece em "Descobrir"!` });
       reset();
+      setCaracteristica("");
+      setCaracteristicas([]);
+      
     } catch (e) {
       setStatus({ ok: false, text: friendlyError(e) });
     }
   };
+
+  function adicionarCaracteristica() {
+    const nova = caracteristica.trim();
+
+    if (!nova || caracteristicas.length >= 5) return;
+
+    // Evita características repetidas
+    if (caracteristicas.some(
+      (item) => item.toLowerCase() === nova.toLowerCase()
+    )) {
+      return;
+    }
+
+    const atualizadas = [...caracteristicas, nova];
+
+    setCaracteristicas(atualizadas);
+
+    setValue("temperament", atualizadas, {
+      shouldValidate: true,
+      shouldDirty: true,
+    });
+
+    setCaracteristica("");
+  }
+
+  function removerCaracteristica(item: string) {
+    const atualizadas = caracteristicas.filter(
+      (caracteristica) => caracteristica !== item
+    );
+
+    setCaracteristicas(atualizadas);
+
+    setValue("temperament", atualizadas, {
+      shouldValidate: true,
+      shouldDirty: true,
+    });
+  }
 
   const speciesLabel = SPECIES.find((s) => s.value === v.species)?.label;
   const sizeLabel = SIZES.find((s) => s.value === v.size)?.label;
@@ -103,6 +143,8 @@ export default function RegisterPet() {
   const photoOk = !!v.photoUrl && badPhoto !== v.photoUrl;
   const cityState = [v.city, v.state].filter(Boolean).join(" · ");
   const meta = [speciesLabel, v.breed, age, sizeLabel, genderLabel, cityState].filter(Boolean).join(" · ");
+  const [caracteristica, setCaracteristica] = useState("");
+  const [caracteristicas, setCaracteristicas] = useState<string[]>([]);
 
   return (
     <>
@@ -134,6 +176,66 @@ export default function RegisterPet() {
               <Chips
                 name="gender" title="Sexo" options={GENDERS} register={register} error={errors.gender?.message}
               />
+              <Field id="temperament" label="Personalidade do pet">
+                <div className="flex flex-col gap-3">
+
+                  <div className="flex gap-2">
+                    <input
+                      id="temperament"
+                      type="text"
+                      value={caracteristica}
+                      onChange={(e) => setCaracteristica(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          adicionarCaracteristica();
+                        }
+                      }}
+                      placeholder="Ex.: Carinhoso, brincalhão..."
+                      disabled={caracteristicas.length >= 5}
+                      className={input}
+                    />
+
+                    <button
+                      type="button"
+                      onClick={adicionarCaracteristica}
+                      disabled={!caracteristica.trim() || caracteristicas.length >= 5}
+                      className="rounded-xl bg-primary-dark px-4 font-semibold text-white disabled:opacity-50"
+                    >
+                      Adicionar
+                    </button>
+                  </div>
+
+                  <p className="text-sm opacity-70">
+                    Adicione até 5 características da personalidade do pet.
+                  </p>
+
+                  <div className="flex flex-wrap gap-2">
+                    {caracteristicas.map((item) => (
+                      <span
+                        key={item}
+                        className="flex items-center gap-2 rounded-full bg-primary-light px-3 py-1 text-sm"
+                      >
+                        {item}
+
+                        <button
+                          type="button"
+                          onClick={() => removerCaracteristica(item)}
+                          aria-label={`Remover ${item}`}
+                          className="font-bold"
+                        >
+                          ×
+                        </button>
+                      </span>
+                    ))}
+                  </div>
+
+                  <p className="text-right text-sm opacity-70">
+                    {caracteristicas.length}/5 características
+                  </p>
+
+                </div>
+              </Field>
             </fieldset>
 
             <fieldset className={group}>
@@ -191,13 +293,18 @@ export default function RegisterPet() {
             >
               {isSubmitting ? "Enviando..." : "Cadastrar pet"}
             </button>
+            {status && (
+              <div
+                className={`mt-4 rounded-lg p-3 text-sm ${status.ok
+                  ? "bg-green-100 text-green-800"
+                  : "bg-red-100 text-red-800"
+                  }`}
+                role="alert"
+              >
+                {status.text}
+              </div>
+            )}
 
-            <p
-              role="status" aria-live="polite"
-              className={status ? `rounded-lg p-3 font-semibold ${status.ok ? "bg-green-100 text-green-900" : "bg-red-100 text-red-900"}` : "sr-only"}
-            >
-              {status?.text}
-            </p>
           </form>
         </div>
 
@@ -225,9 +332,9 @@ export default function RegisterPet() {
             <p className="mt-2 text-sm text-red-700">Não consegui carregar essa foto.</p>
           )}
         </aside>
-        
+
       </section>
-      </>
-      );
-}   
+    </>
+  );
+}
 

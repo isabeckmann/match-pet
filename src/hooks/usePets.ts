@@ -11,6 +11,7 @@ export function usePets() {
   const load = useCallback(async () => {
     setLoading(true);
     setError(null);
+
     try {
       setPets(await getPets());
     } catch (e) {
@@ -21,8 +22,15 @@ export function usePets() {
   }, []);
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
+    // Carrega os pets inicialmente
     load();
+
+    // Atualiza a lista quando um novo pet é cadastrado
+    window.addEventListener("matchpet:pets-updated", load);
+
+    return () => {
+      window.removeEventListener("matchpet:pets-updated", load);
+    };
   }, [load]);
 
   return { pets, loading, error, retry: load };

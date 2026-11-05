@@ -53,10 +53,13 @@ export async function registerPet(form: PetFormData): Promise<Pet> {
     ...form,
     id: `api-${data.id ?? Date.now()}`,
     ageYears: Number(form.ageYears),
-    temperament: ["Novo por aqui"],
-    city: "Santa Maria",
+    temperament: form.temperament ?? [],
+    gender: form.gender as "male" | "female",
+    city: form.city,
   };
   saveMyPet(pet);
   return pet;
+
+  
 }
 export { getMyPets };
