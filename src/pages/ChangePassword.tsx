@@ -25,11 +25,11 @@ export default function ChangePassword() {
     ...register(k),
   });
 
-  // Conta criada com Google: a senha È gerenciada pela Google
+  // Conta criada s√≥ com Google: a senha √© gerenciada pela Google
   if (user && !hasPasswordLogin(user)) {
     return (
       <AuthLayout title="Alterar senha">
-        <p>Sua conta usa o login com Google, ent„o a senha È gerenciada pela sua conta Google.</p>
+        <p>Sua conta usa o login com Google, ent√£o a senha √© gerenciada pela sua conta Google.</p>
       </AuthLayout>
     );
   }

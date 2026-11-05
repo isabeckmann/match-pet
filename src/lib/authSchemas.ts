@@ -14,6 +14,7 @@ export const signupSchema = z
   })
   .refine((d) => d.password === d.confirm, { path: ["confirm"], message: "As senhas não conferem." });
 
+// Regra para senhas NOVAS (redefinir / alterar): 8+ caracteres, com letra e número
 const strongPassword = z
   .string()
   .min(8, "A senha deve ter no mínimo 8 caracteres.")

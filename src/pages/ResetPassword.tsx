@@ -11,10 +11,11 @@ import { authError, checkResetCode, confirmReset } from "../services/authService
 
 type Status = "checking" | "ready" | "done" | "invalid";
 
-// Página aberta pelo link do e-mail do Firebase
+// Página aberta pelo link do e-mail do Firebase (?mode=resetPassword&oobCode=...)
 export default function ResetPassword() {
   const { pathname, search } = useLocation();
   const navigate = useNavigate();
+  // Lê o código uma única vez; depois ele é removido da URL
   const [code] = useState(() => {
     const p = new URLSearchParams(search);
     return p.get("mode") === "resetPassword" ? p.get("oobCode") : null;
@@ -27,6 +28,7 @@ export default function ResetPassword() {
   });
 
   useEffect(() => {
+    // O código é uma credencial: tira da barra de endereço e do histórico
     if (search) navigate(pathname, { replace: true });
     if (!code) return;
     checkResetCode(code)
@@ -38,6 +40,8 @@ export default function ResetPassword() {
         setError(authError(e));
         setStatus("invalid");
       });
+    // roda só na abertura da página
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const props = (k: keyof ResetPasswordData) => ({
