@@ -18,8 +18,8 @@ const outline =
 export default function Navbar() {
   const { user, loading } = useAuth();
   return (
-    <header className="bg-cream/70 backdrop-blur-sm">
-      <nav aria-label="Principal" className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-4 gap-y-1 px-4 py-2">
+    <header className="sticky top-0 z-50 bg-cream/90 backdrop-blur">
+      <nav aria-label="Principal" className="mx-auto flex max-w-6xl items-center gap-4 px-4 py-2">
         <div className="flex-1">
           <Link to="/" className="inline-flex items-center gap-2 text-2xl font-bold text-ink">
             <img src="/logo.svg" alt="" width="40" height="40" className="h-10 w-10" />
@@ -28,7 +28,7 @@ export default function Navbar() {
         </div>
 
         {user && (
-          <ul className="order-last flex w-full justify-center gap-5 sm:order-none sm:w-auto sm:gap-8">
+          <ul className="hidden gap-8 sm:flex">
             {links.map(({ to, label }) => (
               <li key={to}>
                 <NavLink to={to} end={to === "/"} className={linkCls}>{label}</NavLink>
@@ -39,7 +39,7 @@ export default function Navbar() {
 
         <div className="flex flex-1 items-center justify-end gap-2">
           {loading ? null : user ? (
-            <UserMenu user={user} />
+            <UserMenu user={user} links={links} />
           ) : (
             <>
               <NavLink to="/login" className={linkCls}>Entrar</NavLink>

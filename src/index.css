@@ -70,3 +70,7 @@ body {
 @media (prefers-reduced-motion: reduce) {
   [class*="anim-"] { animation: none !important; }
 }
+
+html {
+  scroll-padding-top: 5rem;
+}
