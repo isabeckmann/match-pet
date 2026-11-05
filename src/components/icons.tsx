@@ -43,3 +43,5 @@ export const Sparks = ({ className }: { className?: string }) => (
     <path d="M18 12 6 4M16 26H2M18 40 6 48" />
   </svg>
 );
+export const TrashIcon = (p: IconProps) => (<svg {...sv(p)}><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3" /></svg>);
+export const ChatIcon = (p: IconProps) => (<svg {...sv(p)}><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1.1-4.6A8 8 0 1 1 21 12Z" /><path d="M8.5 12h.01M12 12h.01M15.5 12h.01" /></svg>);

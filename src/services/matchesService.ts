@@ -1,65 +1,53 @@
 import axios from "axios";
-import { http } from "../lib/http";
-import { getMyPets, saveMyPet } from "./petsService";
+import { API, getList, http } from "../lib/http";
+import { createMyPet, getMyPets } from "./petsService";
 import type { Match, Pet } from "../types/pet";
 import type { PetFormData } from "../lib/schemas";
 
-const API = import.meta.env.VITE_MOCKAPI_URL as string;
-const KEY = "matchpet:matches";
+const cacheKey = (uid: string) => `matchpet:matches:${uid}`;
 
-const read = (): Match[] => {
+const read = (uid: string): Match[] => {
   try {
-    return JSON.parse(localStorage.getItem(KEY) ?? "[]");
+    return JSON.parse(localStorage.getItem(cacheKey(uid)) ?? "[]");
   } catch {
     return [];
   }
 };
-const write = (m: Match[]) => localStorage.setItem(KEY, JSON.stringify(m));
+const write = (uid: string, m: Match[]) => localStorage.setItem(cacheKey(uid), JSON.stringify(m));
 
-export const matchedIds = () => read().map((m) => m.id);
+type MatchRecord = Omit<Match, "id" | "remoteId"> & { id: string; petId: string; userId: string };
 
-// GET
-export async function getMatches(): Promise<Match[]> {
-  await http.get(`${API}/matches`, { params: { limit: 1 } });
-  return read();
+export const matchedIds = (uid: string) => read(uid).map((m) => m.id);
+
+// GET (só os matches deste usuário)
+export async function getMatches(uid: string): Promise<Match[]> {
+  const data = await getList<MatchRecord>(`${API}/matches`, { userId: uid });
+  const matches: Match[] = data
+    .filter((r) => r.userId === uid && r.petId) 
+    .map(({ id, petId, userId: _u, ...pet }) => ({ ...pet, id: petId, remoteId: id }));
+  write(uid, matches);
+  return matches;
 }
 
 // POST
-export async function addMatch(pet: Pet): Promise<Match> {
-  const { data } = await http.post(`${API}/matches`, {
-    petId: pet.id,
-    name: pet.name,
-    breed: pet.breed,
-  });
+export async function addMatch(uid: string, pet: Pet): Promise<Match> {
+  const { id: petId, ...rest } = pet;
+  const { data } = await http.post(`${API}/matches`, { ...rest, petId, userId: uid });
   const match = { ...pet, remoteId: data.id };
-  write([match, ...read().filter((m) => m.id !== pet.id)]);
+  write(uid, [match, ...read(uid).filter((m) => m.id !== pet.id)]);
   return match;
 }
 
 // DELETE
-export async function removeMatch(match: Match): Promise<void> {
+export async function removeMatch(uid: string, match: Match): Promise<void> {
   try {
     await http.delete(`${API}/matches/${match.remoteId}`);
   } catch (e) {
     if (!(axios.isAxiosError(e) && e.response?.status === 404)) throw e;
   }
-  write(read().filter((m) => m.id !== match.id));
+  write(uid, read(uid).filter((m) => m.id !== match.id));
 }
 
-// POST (cadastro de pet)
-export async function registerPet(form: PetFormData): Promise<Pet> {
-  const { data } = await http.post(`${API}/pets`, form);
-  const pet: Pet = {
-    ...form,
-    id: `api-${data.id ?? Date.now()}`,
-    ageYears: Number(form.ageYears),
-    temperament: form.temperament ?? [],
-    gender: form.gender as "male" | "female",
-    city: form.city,
-  };
-  saveMyPet(pet);
-  return pet;
-
-  
-}
+// POST (cadastro de pet, vinculado ao usuário)
+export const registerPet = (uid: string, form: PetFormData): Promise<Pet> => createMyPet(uid, form);
 export { getMyPets };
