@@ -51,7 +51,7 @@ export default function Login() {
     }
     try {
       await resetPassword(email);
-      setInfo("Enviamos um link de redefinição para o seu e-mail. Confira também o spam.");
+      setInfo("Se existir uma conta com esse e-mail, enviamos um link de redefinição. Confira também o spam.");
     } catch (e) {
       setError(authError(e));
     }

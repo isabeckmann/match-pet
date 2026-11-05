@@ -1,11 +1,17 @@
 import {
+  confirmPasswordReset,
   createUserWithEmailAndPassword,
+  EmailAuthProvider,
   GoogleAuthProvider,
+  reauthenticateWithCredential,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
+  updatePassword,
   updateProfile,
+  verifyPasswordResetCode,
+  type User,
 } from "firebase/auth";
 import { FirebaseError } from "firebase/app";
 import { auth } from "../lib/firebase";
@@ -18,7 +24,34 @@ export async function signup(name: string, email: string, password: string) {
 
 export const login = (email: string, password: string) => signInWithEmailAndPassword(auth, email, password);
 export const loginWithGoogle = () => signInWithPopup(auth, new GoogleAuthProvider());
-export const resetPassword = (email: string) => sendPasswordResetEmail(auth, email);
+
+// Envia o e-mail de redefinição. Se o e-mail não existir, não revelamos isso
+// (evita descobrir quais e-mails têm conta): a tela mostra a mesma mensagem.
+export async function resetPassword(email: string) {
+  try {
+    await sendPasswordResetEmail(auth, email);
+  } catch (e) {
+    if (e instanceof FirebaseError && e.code === "auth/user-not-found") return;
+    throw e;
+  }
+}
+
+// Confere o código do link (sem consumir) e devolve o e-mail da conta
+export const checkResetCode = (code: string) => verifyPasswordResetCode(auth, code);
+
+// Define a nova senha com o código do link (uso único, expira em 1h)
+export const confirmReset = (code: string, newPassword: string) => confirmPasswordReset(auth, code, newPassword);
+
+// Contas só com Google não têm senha para alterar
+export const hasPasswordLogin = (user: User) => user.providerData.some((p) => p.providerId === "password");
+
+// Alterar senha logado: confirma a senha atual (reautenticação) antes de trocar
+export async function changePassword(currentPassword: string, newPassword: string) {
+  const user = auth.currentUser;
+  if (!user?.email) throw new Error("Sem usuário logado.");
+  await reauthenticateWithCredential(user, EmailAuthProvider.credential(user.email, currentPassword));
+  await updatePassword(user, newPassword);
+}
 export const logout = () => signOut(auth);
 
 export function authError(e: unknown): string {
@@ -34,6 +67,10 @@ export function authError(e: unknown): string {
       "auth/popup-closed-by-user": "Login com Google cancelado.",
       "auth/unauthorized-domain": "Domínio não autorizado no Firebase (veja Authorized domains).",
       "auth/operation-not-allowed": "Este método de login não está ativado no Firebase.",
+      "auth/expired-action-code": "Este link expirou. Peça um novo link de redefinição.",
+      "auth/invalid-action-code": "Link inválido ou já utilizado. Peça um novo link de redefinição.",
+      "auth/requires-recent-login": "Por segurança, saia, entre novamente e tente de novo.",
+      "auth/user-disabled": "Esta conta está desativada.",
     };
     return m[e.code] ?? `Erro de autenticação (${e.code}).`;
   }

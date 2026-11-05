@@ -4,8 +4,10 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import AuthProvider from "./contexts/AuthProvider";
 import Discover from "./pages/Discover";
 import Login from "./pages/Login";
+import ChangePassword from "./pages/ChangePassword";
 import Matches from "./pages/Matches";
 import RegisterPet from "./pages/RegisterPet";
+import ResetPassword from "./pages/ResetPassword";
 import Signup from "./pages/Signup";
 
 export default function App() {
@@ -17,10 +19,12 @@ export default function App() {
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/criar-conta" element={<Signup />} />
+            <Route path="/redefinir-senha" element={<ResetPassword />} />
             <Route element={<ProtectedRoute />}>
               <Route path="/" element={<Discover />} />
               <Route path="/matches" element={<Matches />} />
               <Route path="/cadastrar" element={<RegisterPet />} />
+              <Route path="/alterar-senha" element={<ChangePassword />} />
             </Route>
           </Routes>
         </main>
