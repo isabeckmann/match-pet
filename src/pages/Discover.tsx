@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import DiscoverBackground from "../components/DiscoverBackground";
 import DiscoverCard from "../components/DiscoverCard";
@@ -6,9 +6,10 @@ import MatchCelebration from "../components/MatchCelebration";
 import PawTrail from "../components/PawTrail";
 import { ChevronDownIcon, HeartIcon, PawIcon, Sparks } from "../components/icons";
 import SwipeCard, { type Dir } from "../components/SwipeCard";
+import { useAuth } from "../hooks/useAuth";
 import { friendlyError } from "../lib/http";
 import { usePets } from "../hooks/usePets";
-import { addMatch, matchedIds } from "../services/matchesService";
+import { addMatch, getMatches, matchedIds } from "../services/matchesService";
 import type { Pet } from "../types/pet";
 
 const btn = "rounded-full px-6 py-3 text-lg font-semibold";
@@ -16,7 +17,9 @@ const panel = "mx-auto max-w-md space-y-2 rounded-2xl bg-white/90 p-4 text-left 
 
 export default function Discover() {
   const { pets, loading, error, retry } = usePets();
-  const [seen, setSeen] = useState<string[]>(matchedIds());
+  const { user } = useAuth();
+  const uid = user?.uid ?? "";
+  const [seen, setSeen] = useState<string[]>(() => matchedIds(uid));
   const [species, setSpecies] = useState("");
   const [msg, setMsg] = useState("");
   const [exit, setExit] = useState<Dir | null>(null);
@@ -25,6 +28,12 @@ export default function Discover() {
   const [celebrate, setCelebrate] = useState<Pet | null>(null);
   const navigate = useNavigate();
   const timer = useRef<number | undefined>(undefined);
+
+  // traz do servidor os matches deste usuário (vale também em outro dispositivo)
+  useEffect(() => {
+    if (!uid) return;
+    getMatches(uid).then((m) => setSeen((s) => [...new Set([...s, ...m.map((x) => x.id)])])).catch(() => {});
+  }, [uid]);
 
   const queue = pets.filter((p) => !seen.includes(p.id) && (!species || p.species === species));
   const pet = queue[0];
@@ -50,7 +59,7 @@ export default function Discover() {
       if (queue.length > 1) flash("Vamos conhecer outro amiguinho! 🐾");
     } else {
       try {
-        await addMatch(pet);
+        await addMatch(uid, pet);
         setSeen([...seen, pet.id]);
         setCelebrate(pet);
       } catch (e) {

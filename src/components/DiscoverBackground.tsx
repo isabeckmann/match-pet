@@ -11,7 +11,7 @@
 
     const stroke = { stroke: "#5a3a29", strokeWidth: 5, strokeLinecap: "round", fill: "none" } as const;
 
-    function Dog({ className }: { className: string }) {
+    export function Dog({ className }: { className: string }) {
     return (
         <svg aria-hidden="true" viewBox="0 0 200 190" className={className}>
         <path d="M42 52c-26 4-38 40-30 78 3 14 22 16 30 4 10-16 10-48 0-82Z" fill="#c9854f" />
@@ -28,7 +28,7 @@
     );
     }
 
-    function Cat({ className }: { className: string }) {
+    export function Cat({ className }: { className: string }) {
     return (
         <svg aria-hidden="true" viewBox="0 0 200 190" className={className}>
         <path d="M34 64 40 6 88 40Z" fill="#f0b98a" />

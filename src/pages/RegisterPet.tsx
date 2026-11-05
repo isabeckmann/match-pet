@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useForm, type UseFormRegister } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Field from "../components/Field";
+import { useAuth } from "../hooks/useAuth";
 import { friendlyError } from "../lib/http";
 import { petSchema, type PetFormData } from "../lib/schemas";
 import { registerPet } from "../services/matchesService";
@@ -69,6 +70,7 @@ function Chips({
 }
 
 export default function RegisterPet() {
+  const { user } = useAuth();
   const [status, setStatus] = useState<{ ok: boolean; text: string } | null>(null);
   const [badPhoto, setBadPhoto] = useState("");
   const {
@@ -88,7 +90,7 @@ export default function RegisterPet() {
   const onSubmit = async (data: PetFormData) => {
     setStatus(null);
     try {
-      const pet = await registerPet(data);
+      const pet = await registerPet(user?.uid ?? "", data);
       setStatus({ ok: true, text: `${pet.name} foi cadastrado e já aparece em "Descobrir"!` });
       reset();
       setCaracteristica("");

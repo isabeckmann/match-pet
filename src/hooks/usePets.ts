@@ -1,9 +1,12 @@
 import { useCallback, useEffect, useState } from "react";
+import { useAuth } from "./useAuth";
 import { friendlyError } from "../lib/http";
 import { getPets } from "../services/petsService";
 import type { Pet } from "../types/pet";
 
 export function usePets() {
+  const { user } = useAuth();
+  const uid = user?.uid ?? "";
   const [pets, setPets] = useState<Pet[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -13,19 +16,17 @@ export function usePets() {
     setError(null);
 
     try {
-      setPets(await getPets());
+      setPets(await getPets(uid));
     } catch (e) {
       setError(friendlyError(e));
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [uid]);
 
   useEffect(() => {
-    // Carrega os pets inicialmente
     load();
 
-    // Atualiza a lista quando um novo pet é cadastrado
     window.addEventListener("matchpet:pets-updated", load);
 
     return () => {

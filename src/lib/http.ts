@@ -1,6 +1,15 @@
 import axios from "axios";
 
 export const http = axios.create({ timeout: 10000 });
+export const API = (import.meta.env.VITE_MOCKAPI_URL as string).replace(/\/+$/, "");
+export async function getList<T>(url: string, params: Record<string, string>): Promise<T[]> {
+  try {
+    return (await http.get<T[]>(url, { params })).data;
+  } catch (e) {
+    if (axios.isAxiosError(e) && e.response?.status === 404) return [];
+    throw e;
+  }
+}
 
 export function friendlyError(e: unknown): string {
   if (axios.isAxiosError(e)) {

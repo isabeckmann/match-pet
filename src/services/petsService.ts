@@ -1,4 +1,5 @@
-import { http } from "../lib/http";
+import { API, getList, http } from "../lib/http";
+import type { PetFormData } from "../lib/schemas";
 import type { Pet } from "../types/pet";
 
 interface Breed {
@@ -16,7 +17,6 @@ interface Breed {
 const NAMES = ["Thor", "Luna", "Mel", "Bob", "Nina", "Pipoca", "Mike", "Lola", "Bela", "Simba", "Amora", "Fred"];
 const CITIES = ["Santa Maria", "Porto Alegre", "Pelotas", "Caxias do Sul", "Canoas", "Passo Fundo"];
 const PEOPLE = ["Ana Souza", "Carlos Lima", "Marina Reis", "João Pires"];
-const KEY = "matchpet:myPets";
 
 const dogKey = import.meta.env.VITE_DOG_API_KEY as string | undefined;
 const catKey = import.meta.env.VITE_CAT_API_KEY as string | undefined;
@@ -45,23 +45,31 @@ function toPet(b: Breed, species: Pet["species"], i: number): Pet {
   };
 }
 
-export function getMyPets(): Pet[] {
-  try {
-    return JSON.parse(localStorage.getItem(KEY) ?? "[]");
-  } catch {
-    return [];
-  }
+type PetRecord = Omit<Pet, "id"> & { id: string | number; userId: string };
+
+const fromRecord = ({ id, userId: _u, ...pet }: PetRecord): Pet => ({
+  ...pet,
+  id: `api-${id}`,
+  ageYears: Number(pet.ageYears),
+  temperament: pet.temperament ?? [],
+});
+
+export async function getMyPets(uid: string): Promise<Pet[]> {
+  const data = await getList<PetRecord>(`${API}/pets`, { userId: uid });
+  return data.filter((r) => r.userId === uid).map(fromRecord);
 }
 
-export function saveMyPet(pet: Pet) {
-  localStorage.setItem(KEY, JSON.stringify([pet, ...getMyPets()]));
+export async function createMyPet(uid: string, form: PetFormData): Promise<Pet> {
+  const { data } = await http.post<PetRecord>(`${API}/pets`, { ...form, userId: uid });
+  const pet = fromRecord({ ...form, ...data, userId: uid } as PetRecord);
 
   // Avisa que a lista de pets foi atualizada
   window.dispatchEvent(new Event("matchpet:pets-updated"));
+  return pet;
 }
 
-export async function getPets(): Promise<Pet[]> {
-  const [dogs, cats] = await Promise.all([
+export async function getPets(uid: string): Promise<Pet[]> {
+  const [dogs, cats, mine] = await Promise.all([
     http.get<Breed[]>("https://api.thedogapi.com/v1/breeds", {
       params: { limit: 12 },
       headers: dogKey ? { "x-api-key": dogKey } : {},
@@ -70,6 +78,7 @@ export async function getPets(): Promise<Pet[]> {
       params: { limit: 12 },
       headers: catKey ? { "x-api-key": catKey } : {},
     }),
+    getMyPets(uid).catch(() => [] as Pet[]), 
   ]);
   const fromApi = (list: Breed[], s: Pet["species"]) =>
     list.filter((b) => b.reference_image_id).map((b, i) => toPet(b, s, i));
@@ -78,5 +87,5 @@ export async function getPets(): Promise<Pet[]> {
   const mixed = Array.from({ length: Math.max(d.length, c.length) }, (_, i) => [d[i], c[i]])
     .flat()
     .filter(Boolean);
-  return [...getMyPets(), ...mixed];
+  return [...mine, ...mixed];
 }
