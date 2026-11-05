@@ -7,7 +7,6 @@ import { petSchema, type PetFormData } from "../lib/schemas";
 import { registerPet } from "../services/matchesService";
 import PhotoUpload from "../components/PhotoUpload/PhotoUpload";
 import DiscoverBackground from "../components/DiscoverBackground";
-import Tag from "../components/Tag";
 
 const input =
   "w-full min-h-11 rounded-lg border border-ink bg-white p-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink aria-[invalid=true]:border-red-700";
@@ -203,7 +202,7 @@ export default function RegisterPet() {
         </div>
 
         {/* Prévia: mostra ao adotante como o card vai aparecer */}
-        <aside aria-label="Prévia do anúncio" className="overflow-hidden rounded-3xl bg-white shadow-md">
+        <aside aria-label="Prévia do anúncio" className="hidden self-start lg:sticky lg:top-24 lg:block">
           <h2 className="mb-2 font-semibold opacity-80">Assim os adotantes irão ver</h2>
           <div className="max-w-xs overflow-hidden rounded-2xl border border-ink/20 bg-white">
             <div className="grid aspect-[4/3] place-items-center bg-ink/5 text-6xl">
