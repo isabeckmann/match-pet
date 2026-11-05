@@ -5,6 +5,7 @@ export interface Pet {
   breed: string;
   ageYears: number;
   size: "small" | "medium" | "large";
+  gender: "male" | "female";
   temperament: string[];
   photoUrl: string;
   description: string;

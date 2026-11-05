@@ -52,9 +52,7 @@ export default function PhotoUpload({ onUpload }: PhotoUploadProps) {
       setCarregando(true);
       setMensagem(null);
 
-      const resultado = await uploadFoto(foto);
-
-      const url = `${import.meta.env.VITE_API_URL}/uploads/${encodeURIComponent(resultado.arquivo.nome)}`;
+      const url = await uploadFoto(foto);
 
       onUpload(url);
       setEnviada(true);

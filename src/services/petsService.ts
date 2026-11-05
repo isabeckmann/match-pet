@@ -9,6 +9,8 @@ interface Breed {
   description?: string;
   weight?: { metric: string };
   reference_image_id?: string;
+  city: string;
+  gender?: "male" | "female";
 }
 
 const NAMES = ["Thor", "Luna", "Mel", "Bob", "Nina", "Pipoca", "Mike", "Lola", "Bela", "Simba", "Amora", "Fred"];
@@ -31,6 +33,7 @@ function toPet(b: Breed, species: Pet["species"], i: number): Pet {
     name: NAMES[n % NAMES.length],
     species,
     breed: b.name,
+    gender: n % 2 === 0 ? "male" : "female",
     ageYears: (n * 3) % 12,
     size: sizeOf(b.weight?.metric),
     temperament: (b.temperament ?? "Dócil, Carinhoso").split(",").map((t) => t.trim()).slice(0, 4),
@@ -38,7 +41,7 @@ function toPet(b: Breed, species: Pet["species"], i: number): Pet {
     description: b.description ?? b.bred_for ?? "Um companheiro cheio de energia esperando por um lar.",
     contactName: PEOPLE[n % PEOPLE.length],
     contactPhone: `(55) 99${String(100 + n).padStart(3, "0")}-${String(1000 + n * 7)}`,
-    city: CITIES[n % CITIES.length],
+    city: CITIES[n % CITIES.length] || b.city,
   };
 }
 
@@ -52,6 +55,9 @@ export function getMyPets(): Pet[] {
 
 export function saveMyPet(pet: Pet) {
   localStorage.setItem(KEY, JSON.stringify([pet, ...getMyPets()]));
+
+  // Avisa que a lista de pets foi atualizada
+  window.dispatchEvent(new Event("matchpet:pets-updated"));
 }
 
 export async function getPets(): Promise<Pet[]> {
