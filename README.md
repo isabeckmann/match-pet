@@ -171,6 +171,6 @@ src/
 
 ## Equipe
 
-- Isadora Beckmann
-- Julia Picinini
-- Luiza Graminho
+- [Isadora Beckmann](https://github.com/isabeckmann)
+- [Julia Picinini](https://github.com/jupicinink)
+- [Luiza Graminho](https://github.com/Luiza-graminho)
