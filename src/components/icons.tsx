@@ -21,7 +21,6 @@ export const SearchIcon = (p: IconProps) => (<svg {...sv(p)}><circle cx="11" cy=
 export const HeartIcon = (p: IconProps) => (
   <svg {...sv(p)}><path d="M12 21s-7.5-4.6-9.5-9.2C1.2 8.6 3 5 6.5 5c2 0 3.5 1.1 5.5 3.2C14 6.1 15.5 5 17.5 5c3.5 0 5.3 3.6 4 6.8C19.5 16.4 12 21 12 21Z" /></svg>
 );
-export const CalendarIcon = (p: IconProps) => (<svg {...sv(p)}><rect x="3" y="5" width="18" height="16" rx="3" /><path d="M8 3v4M16 3v4M3 10h18" /></svg>);
 export const LogoutIcon = (p: IconProps) => (<svg {...sv(p)}><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><path d="m16 17 5-5-5-5M21 12H9" /></svg>);
 export const ChevronDownIcon = (p: IconProps) => (<svg {...sv(p)}><path d="m6 9 6 6 6-6" /></svg>);
 export const PinIcon = (p: IconProps) => (<svg {...sv(p)}><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21Z" /><circle cx="12" cy="9.5" r="2.5" /></svg>);

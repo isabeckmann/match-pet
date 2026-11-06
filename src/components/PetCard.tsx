@@ -35,7 +35,7 @@ export default function PetCard({ pet, children, onHeart, heartLabel }: Props) {
       </div>
 
       <div className="flex min-w-0 flex-col justify-center gap-2.5 py-1 pr-1">
-        <h3 className="truncate text-3xl font-bold leading-none">{pet.name}</h3>
+        <h2 className="truncate text-3xl font-bold leading-none">{pet.name}</h2>
         <p className="flex items-center gap-2">
           <PawIcon size={20} className="shrink-0" />
           <span className="truncate">

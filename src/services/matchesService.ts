@@ -1,6 +1,6 @@
 import axios from "axios";
 import { API, getList, http } from "../lib/http";
-import { createMyPet, getMyPets } from "./petsService";
+import { createMyPet } from "./petsService";
 import type { Match, Pet } from "../types/pet";
 import type { PetFormData } from "../lib/schemas";
 
@@ -50,4 +50,3 @@ export async function removeMatch(uid: string, match: Match): Promise<void> {
 
 // POST (cadastro de pet, vinculado ao usuário)
 export const registerPet = (uid: string, form: PetFormData): Promise<Pet> => createMyPet(uid, form);
-export { getMyPets };
