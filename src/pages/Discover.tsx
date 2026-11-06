@@ -12,7 +12,7 @@ import { usePets } from "../hooks/usePets";
 import { addMatch, getMatches, matchedIds } from "../services/matchesService";
 import type { Pet } from "../types/pet";
 
-const btn = "rounded-full px-6 py-3 text-lg font-semibold";
+const btn = "rounded-full px-6 py-2.5 text-lg font-semibold";
 const panel = "mx-auto max-w-md space-y-2 rounded-2xl bg-white/90 p-4 text-left shadow";
 
 export default function Discover() {
@@ -73,14 +73,14 @@ export default function Discover() {
   return (
     <>
       <DiscoverBackground />
-      <section className="mx-auto max-w-4xl space-y-5 px-4 pb-40 pt-4 text-center">
-        <h1 className="relative inline-block text-3xl font-bold leading-tight sm:text-5xl">
-          Encontre seu <br />
+      <section className="mx-auto max-w-4xl space-y-3 overflow-x-clip px-4 pb-10 pt-3 text-center">
+        <h1 className="relative inline-block text-3xl font-bold leading-tight sm:text-4xl">
+          Encontre seu <br/>
           <span className="text-coral">novo melhor amigo!</span>
           <Sparks className="absolute -left-14 top-1/2 hidden -translate-y-1/2 text-ink sm:block" />
           <Sparks className="absolute -right-14 top-1/2 hidden -translate-y-1/2 -scale-x-100 text-ink sm:block" />
         </h1>
-        <p className="flex items-center justify-center gap-2 text-lg">
+        <p className="flex items-center justify-center gap-2 text-base sm:text-lg">
           Adote. Cuide. Faça a diferença. <HeartIcon className="text-coral" />
         </p>
 
@@ -114,7 +114,7 @@ export default function Discover() {
         {!loading && !error && !pet && <p className={panel}>Não há mais pets por aqui. Volte mais tarde!</p>}
 
         {pet && (
-          <div className="relative">
+          <div className="relative mx-auto max-w-3xl">
             {trail > 0 && <PawTrail key={trail} />}
             <SwipeCard key={`${pet.id}-${attempt}`} exit={exit} onSwipe={swipe} onExited={finish}>
               <DiscoverCard pet={pet}>

@@ -73,6 +73,9 @@ export default function RegisterPet() {
   const { user } = useAuth();
   const [status, setStatus] = useState<{ ok: boolean; text: string } | null>(null);
   const [badPhoto, setBadPhoto] = useState("");
+  const [caracteristica, setCaracteristica] = useState("");
+  const [caracteristicas, setCaracteristicas] = useState<string[]>([]);
+  const [uploadKey, setUploadKey] = useState(0); // remonta o PhotoUpload depois de cadastrar
   const {
     register, handleSubmit, reset, watch, setValue,
     formState: { errors, isSubmitting },
@@ -91,11 +94,12 @@ export default function RegisterPet() {
     setStatus(null);
     try {
       const pet = await registerPet(user?.uid ?? "", data);
-      setStatus({ ok: true, text: `${pet.name} foi cadastrado e já aparece em "Descobrir"!` });
+      setStatus({ ok: true, text: `${pet.name} foi cadastrado! Ele já aparece em "Descobrir" para os outros usuários.` });
       reset();
       setCaracteristica("");
       setCaracteristicas([]);
-      
+      setBadPhoto("");
+      setUploadKey((k) => k + 1);
     } catch (e) {
       setStatus({ ok: false, text: friendlyError(e) });
     }
@@ -145,13 +149,11 @@ export default function RegisterPet() {
   const photoOk = !!v.photoUrl && badPhoto !== v.photoUrl;
   const cityState = [v.city, v.state].filter(Boolean).join(" · ");
   const meta = [speciesLabel, v.breed, age, sizeLabel, genderLabel, cityState].filter(Boolean).join(" · ");
-  const [caracteristica, setCaracteristica] = useState("");
-  const [caracteristicas, setCaracteristicas] = useState<string[]>([]);
 
   return (
     <>
       <DiscoverBackground />
-      <section className="mx-auto grid max-w-5xl gap-8 p-4 lg:grid-cols-[minmax(0,34rem)_1fr]">
+      <section className="mx-auto grid max-w-5xl grid-cols-[minmax(0,1fr)] gap-8 p-4 lg:grid-cols-[minmax(0,34rem)_1fr]">
         <div>
           <h1 className="mb-2 text-3xl font-bold">Cadastrar pet para adoção</h1>
           <p className="mb-6">
@@ -178,7 +180,7 @@ export default function RegisterPet() {
               <Chips
                 name="gender" title="Sexo" options={GENDERS} register={register} error={errors.gender?.message}
               />
-              <Field id="temperament" label="Personalidade do pet">
+              <Field id="temperament" label="Personalidade do pet (opcional)" required={false}>
                 <div className="flex flex-col gap-3">
 
                   <div className="flex gap-2">
@@ -195,7 +197,7 @@ export default function RegisterPet() {
                       }}
                       placeholder="Ex.: Carinhoso, brincalhão..."
                       disabled={caracteristicas.length >= 5}
-                      className={input}
+                      className={`${input} min-w-0`}
                     />
 
                     <button
@@ -216,7 +218,7 @@ export default function RegisterPet() {
                     {caracteristicas.map((item) => (
                       <span
                         key={item}
-                        className="flex items-center gap-2 rounded-full bg-primary-light px-3 py-1 text-sm"
+                        className="flex items-center gap-2 rounded-full bg-sage px-3 py-1 text-sm"
                       >
                         {item}
 
@@ -242,8 +244,9 @@ export default function RegisterPet() {
 
             <fieldset className={group}>
               <legend className={legend}>Foto e história</legend>
-              <Field id="photoUrl" label="Foto do pet" error={errors.photoUrl?.message}>
+              <Field id="foto" label="Foto do pet" error={errors.photoUrl?.message}>
                 <PhotoUpload
+                  key={uploadKey}
                   onUpload={(url) => {
                     setValue("photoUrl", url, {
                       shouldValidate: true,

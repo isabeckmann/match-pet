@@ -54,9 +54,10 @@ const fromRecord = ({ id, userId: _u, ...pet }: PetRecord): Pet => ({
   temperament: pet.temperament ?? [],
 });
 
-export async function getMyPets(uid: string): Promise<Pet[]> {
-  const data = await getList<PetRecord>(`${API}/pets`, { userId: uid });
-  return data.filter((r) => r.userId === uid).map(fromRecord);
+// GET: pets cadastrados por OUTROS usuários. 
+export async function getCommunityPets(uid: string): Promise<Pet[]> {
+  const data = await getList<PetRecord>(`${API}/pets`, {});
+  return data.filter((r) => r.userId !== uid).map(fromRecord).reverse();
 }
 
 export async function createMyPet(uid: string, form: PetFormData): Promise<Pet> {
@@ -69,16 +70,16 @@ export async function createMyPet(uid: string, form: PetFormData): Promise<Pet> 
 }
 
 export async function getPets(uid: string): Promise<Pet[]> {
-  const [dogs, cats, mine] = await Promise.all([
+  const [dogs, cats, community] = await Promise.all([
     http.get<Breed[]>("https://api.thedogapi.com/v1/breeds", {
-      params: { limit: 12 },
+      params: { limit: 20 },
       headers: dogKey ? { "x-api-key": dogKey } : {},
     }),
     http.get<Breed[]>("https://api.thecatapi.com/v1/breeds", {
-      params: { limit: 12 },
+      params: { limit: 20 },
       headers: catKey ? { "x-api-key": catKey } : {},
     }),
-    getMyPets(uid).catch(() => [] as Pet[]), 
+    getCommunityPets(uid).catch(() => [] as Pet[]),
   ]);
   const fromApi = (list: Breed[], s: Pet["species"]) =>
     list.filter((b) => b.reference_image_id).map((b, i) => toPet(b, s, i));
@@ -87,5 +88,5 @@ export async function getPets(uid: string): Promise<Pet[]> {
   const mixed = Array.from({ length: Math.max(d.length, c.length) }, (_, i) => [d[i], c[i]])
     .flat()
     .filter(Boolean);
-  return [...mine, ...mixed];
+  return [...community, ...mixed];
 }

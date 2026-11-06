@@ -4,7 +4,6 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import AuthProvider from "./contexts/AuthProvider";
 import Discover from "./pages/Discover";
 import Login from "./pages/Login";
-import ChangePassword from "./pages/ChangePassword";
 import Matches from "./pages/Matches";
 import RegisterPet from "./pages/RegisterPet";
 import ResetPassword from "./pages/ResetPassword";
@@ -24,7 +23,6 @@ export default function App() {
               <Route path="/" element={<Discover />} />
               <Route path="/matches" element={<Matches />} />
               <Route path="/cadastrar" element={<RegisterPet />} />
-              <Route path="/alterar-senha" element={<ChangePassword />} />
             </Route>
           </Routes>
         </main>

@@ -14,7 +14,7 @@ export const petSchema = z.object({
   contactPhone: z
     .string()
     .regex(/^\(?\d{2}\)?\s?9?\d{4}-?\d{4}$/, "Telefone inválido. Ex.: (55) 99999-9999"),
-  photoUrl: z.url("Informe uma URL de foto válida (https://...)."),
+  photoUrl: z.url("Envie uma foto do pet: escolha o arquivo e toque em \"Enviar foto\"."),
   temperament: z
   .array(z.string().trim().min(1))
   .max(5, "Adicione no máximo 5 características.")

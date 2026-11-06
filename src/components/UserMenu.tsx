@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import type { User } from "firebase/auth";
-import { hasPasswordLogin, logout } from "../services/authService";
-import { ChevronDownIcon, LockIcon, LogoutIcon } from "./icons";
+import { logout } from "../services/authService";
+import { ChevronDownIcon, LogoutIcon } from "./icons";
 
 const item =
   "flex min-h-11 w-full items-center gap-3 rounded-xl px-3 text-left font-medium text-ink hover:bg-sage/60";
@@ -75,13 +75,6 @@ export default function UserMenu({ user, links }: { user: User; links: { to: str
             ))}
           </ul>
           <ul className="mt-2 flex flex-col gap-1">
-            {hasPasswordLogin(user) && (
-              <li>
-                <Link to="/alterar-senha" onClick={() => setOpen(false)} className={item}>
-                  <LockIcon /> Alterar senha
-                </Link>
-              </li>
-            )}
             <li>
               <button
                 type="button"

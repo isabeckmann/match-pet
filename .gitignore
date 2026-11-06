@@ -6,7 +6,7 @@ dist
 dist-ssr
 *.local
 
-# Variáveis de ambiente (NUNCA commitar)
+# Variáveis de ambiente
 .env
 .env.*
 !.env.example

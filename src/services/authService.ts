@@ -1,17 +1,13 @@
 import {
   confirmPasswordReset,
   createUserWithEmailAndPassword,
-  EmailAuthProvider,
   GoogleAuthProvider,
-  reauthenticateWithCredential,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
-  updatePassword,
   updateProfile,
   verifyPasswordResetCode,
-  type User,
 } from "firebase/auth";
 import { FirebaseError } from "firebase/app";
 import { auth } from "../lib/firebase";
@@ -42,16 +38,6 @@ export const checkResetCode = (code: string) => verifyPasswordResetCode(auth, co
 // Define a nova senha com o código do link (uso único, expira em 1h)
 export const confirmReset = (code: string, newPassword: string) => confirmPasswordReset(auth, code, newPassword);
 
-// Contas só com Google não têm senha para alterar
-export const hasPasswordLogin = (user: User) => user.providerData.some((p) => p.providerId === "password");
-
-// Alterar senha logado: confirma a senha atual (reautenticação) antes de trocar
-export async function changePassword(currentPassword: string, newPassword: string) {
-  const user = auth.currentUser;
-  if (!user?.email) throw new Error("Sem usuário logado.");
-  await reauthenticateWithCredential(user, EmailAuthProvider.credential(user.email, currentPassword));
-  await updatePassword(user, newPassword);
-}
 export const logout = () => signOut(auth);
 
 export function authError(e: unknown): string {
@@ -69,7 +55,6 @@ export function authError(e: unknown): string {
       "auth/operation-not-allowed": "Este método de login não está ativado no Firebase.",
       "auth/expired-action-code": "Este link expirou. Peça um novo link de redefinição.",
       "auth/invalid-action-code": "Link inválido ou já utilizado. Peça um novo link de redefinição.",
-      "auth/requires-recent-login": "Por segurança, saia, entre novamente e tente de novo.",
       "auth/user-disabled": "Esta conta está desativada.",
     };
     return m[e.code] ?? `Erro de autenticação (${e.code}).`;

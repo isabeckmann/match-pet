@@ -3,7 +3,7 @@
 @theme {
   --font-sans: "Fredoka Variable", system-ui, sans-serif;
   --color-primary: #ff6f5e;
-  --color-primary-dark: #ef4e42;
+  --color-primary-dark: #c2352a; /* texto branco sobre ele: contraste 5,4:1 (AA) */
   --color-ink: #1f3d2b;
   --color-tag: #6fafa3;
   --color-emphasis: #ffc857;
@@ -73,4 +73,6 @@ body {
 
 html {
   scroll-padding-top: 5rem;
+  /* rede de segurança: nada (ex.: card saindo no swipe) cria scroll lateral */
+  overflow-x: clip;
 }
