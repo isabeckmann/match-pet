@@ -7,12 +7,11 @@ const SIZES = { small: "Pequeno", medium: "Médio", large: "Grande" };
 interface Props {
   pet: Pet;
   children?: ReactNode; // ações (Contato / Remover)
-  onHeart?: () => void; // coração sobre a foto
-  heartLabel?: string;
+  favorite?: boolean; // mostra o coração preenchido sobre a foto (só indicador, não é botão)
 }
 
 // Card horizontal: foto à esquerda, informações à direita
-export default function PetCard({ pet, children, onHeart, heartLabel }: Props) {
+export default function PetCard({ pet, children, favorite }: Props) {
   return (
     <article className="grid grid-cols-[minmax(0,2fr)_minmax(0,3fr)] gap-4 rounded-[1.75rem] bg-[#fffaf5]/95 p-3 shadow-[0_14px_34px_-18px_rgba(120,70,40,0.45)] sm:gap-5 sm:p-4">
       <div className="relative min-h-52">
@@ -22,15 +21,13 @@ export default function PetCard({ pet, children, onHeart, heartLabel }: Props) {
           className="absolute inset-0 h-full w-full rounded-2xl object-cover"
           loading="lazy"
         />
-        {onHeart && (
-          <button
-            type="button"
-            onClick={onHeart}
-            aria-label={heartLabel}
-            className="absolute right-2 top-2 grid h-10 w-10 place-items-center rounded-full bg-white/45 text-white backdrop-blur-sm transition hover:bg-white/70 hover:text-coral"
+        {favorite && (
+          <span
+            aria-hidden="true"
+            className="absolute right-2 top-2 grid h-10 w-10 place-items-center rounded-full bg-white/80 text-coral backdrop-blur-sm"
           >
-            <HeartIcon size={22} />
-          </button>
+            <HeartIcon size={22} className="fill-current" />
+          </span>
         )}
       </div>
 

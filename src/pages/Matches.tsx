@@ -87,7 +87,7 @@ export default function Matches() {
 
         <div className="grid gap-5 lg:grid-cols-2">
           {list.map((m) => (
-            <PetCard key={m.id} pet={m} onHeart={() => setToRemove(m)} heartLabel={`Remover ${m.name} dos matches`}>
+            <PetCard key={m.id} pet={m} favorite>
               <div className="flex flex-wrap gap-3 pt-1">
                 <button onClick={() => setSelected(m)} className={contactBtn}><ChatIcon size={20} /> Contato</button>
                 <button onClick={() => setToRemove(m)} className={removeBtn}><TrashIcon size={20} /> Remover</button>
@@ -102,9 +102,19 @@ export default function Matches() {
         <p>Telefone: {selected?.contactPhone}</p>
         <p>Cidade: {selected?.city}</p>
       </Modal>
-      <Modal open={!!toRemove} title="Remover match?" onClose={() => setToRemove(null)}>
+      <Modal
+        open={!!toRemove}
+        title="Remover match?"
+        onClose={() => setToRemove(null)}
+        closeLabel="Cancelar"
+        closeClassName="bg-emphasis text-ink"
+        actions={
+          <button type="button" onClick={confirmRemove} className={removeBtn}>
+            Sim, remover
+          </button>
+        }
+      >
         <p>Deseja remover {toRemove?.name} dos seus matches?</p>
-        <button onClick={confirmRemove} className={`${btn} mt-3 bg-emphasis text-ink`}>Sim, remover</button>
       </Modal>
     </>
   );
