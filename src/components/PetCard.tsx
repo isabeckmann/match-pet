@@ -36,7 +36,8 @@ export default function PetCard({ pet, children, favorite }: Props) {
         <p className="flex items-center gap-2">
           <PawIcon size={20} className="shrink-0" />
           <span className="truncate">
-            {pet.breed} · {pet.ageYears} {pet.ageYears === 1 ? "ano" : "anos"} · {SIZES[pet.size]}
+            {pet.breed} · {pet.ageYears} {pet.ageYears === 1 ? "ano" : "anos"} ·{" "}
+            {SIZES[pet.size]}
           </span>
         </p>
         <p className="flex items-center gap-2">
@@ -45,7 +46,12 @@ export default function PetCard({ pet, children, favorite }: Props) {
         </p>
         <ul className="flex flex-wrap gap-1.5" aria-label="Personalidade">
           {pet.temperament.map((t) => (
-            <li key={t} className="rounded-full bg-[#bfe0d0] px-3 py-0.5 text-sm font-medium text-ink">{t}</li>
+            <li
+              key={t}
+              className="rounded-full bg-[#bfe0d0] px-3 py-0.5 text-sm font-medium text-ink"
+            >
+              {t}
+            </li>
           ))}
         </ul>
         {children}

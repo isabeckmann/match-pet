@@ -17,7 +17,10 @@ export default function MatchesBackground() {
     <div
       aria-hidden="true"
       className="fixed inset-0 -z-10 overflow-hidden"
-      style={{ background: "linear-gradient(180deg, #fff3ea 0%, var(--color-peach) 100%)" }}
+      style={{
+        background:
+          "linear-gradient(180deg, #fff3ea 0%, var(--color-peach) 100%)",
+      }}
     >
       <div className="absolute -left-24 top-12 h-72 w-72 rounded-full bg-[#fbd5b6]/60" />
       <div className="absolute -right-20 top-6 h-64 w-80 rounded-[50%] bg-[#fbd5b6]/60" />
@@ -25,7 +28,11 @@ export default function MatchesBackground() {
       <div className="absolute -right-20 bottom-[-3rem] h-64 w-80 rounded-[50%] bg-hill/60" />
 
       {PAWS.map((p, i) => (
-        <span key={i} className="absolute" style={{ left: p.x, top: p.y, transform: `rotate(${p.r}deg)` }}>
+        <span
+          key={i}
+          className="absolute"
+          style={{ left: p.x, top: p.y, transform: `rotate(${p.r}deg)` }}
+        >
           <PawIcon size={p.s} className={p.c} />
         </span>
       ))}

@@ -3,13 +3,20 @@ import MatchesBackground from "../components/MatchesBackground";
 import MatchesMascots from "../components/MatchesMascots";
 import Modal from "../components/Modal";
 import PetCard from "../components/PetCard";
-import { HeartIcon, SearchIcon, Sparks, TrashIcon, ChatIcon } from "../components/icons";
+import {
+  HeartIcon,
+  SearchIcon,
+  Sparks,
+  TrashIcon,
+  ChatIcon,
+} from "../components/icons";
 import { useAuth } from "../hooks/useAuth";
 import { friendlyError } from "../lib/http";
 import { getMatches, removeMatch } from "../services/matchesService";
 import type { Match } from "../types/pet";
 
-const btn = "inline-flex items-center justify-center gap-2 rounded-full px-5 py-2 font-semibold transition";
+const btn =
+  "min-h-11 inline-flex items-center justify-center gap-2 rounded-full px-5 py-2 font-semibold transition";
 const contactBtn = `${btn} border-2 border-ink bg-white/70 text-ink hover:bg-white`;
 // Texto branco sobre o vermelho escuro mantém o contraste AA
 const removeBtn = `${btn} bg-primary-dark text-white shadow-sm hover:brightness-110`;
@@ -44,7 +51,10 @@ export default function Matches() {
   };
 
   const q = query.toLowerCase();
-  const list = matches.filter((m) => m.name.toLowerCase().includes(q) || m.breed.toLowerCase().includes(q));
+  const list = matches.filter(
+    (m) =>
+      m.name.toLowerCase().includes(q) || m.breed.toLowerCase().includes(q),
+  );
 
   return (
     <>
@@ -58,16 +68,24 @@ export default function Matches() {
                 <HeartIcon size={64} className="fill-white" />
               </span>
               <div>
-                <h1 className="text-4xl font-bold leading-tight sm:text-5xl">Meus Matches</h1>
+                <h1 className="text-4xl font-bold leading-tight sm:text-5xl">
+                  Meus Matches
+                </h1>
                 <p className="flex items-center gap-2 text-lg text-ink/80">
-                  Aqui estão seus pets favoritos! <HeartIcon size={22} className="fill-ink text-ink" />
+                  Aqui estão seus pets favoritos!{" "}
+                  <HeartIcon size={22} className="fill-ink text-ink" />
                 </p>
               </div>
             </div>
 
             <div className="relative max-w-xl">
-              <label htmlFor="busca" className="sr-only">Buscar por nome ou raça</label>
-              <SearchIcon size={22} className="pointer-events-none absolute left-5 top-1/2 -translate-y-1/2 text-ink" />
+              <label htmlFor="busca" className="sr-only">
+                Buscar por nome ou raça
+              </label>
+              <SearchIcon
+                size={22}
+                className="pointer-events-none absolute left-5 top-1/2 -translate-y-1/2 text-ink"
+              />
               <input
                 id="busca"
                 type="search"
@@ -82,22 +100,38 @@ export default function Matches() {
         </div>
 
         {loading && <p role="status">Carregando...</p>}
-        {error && <p role="alert" className="font-medium text-primary-dark">{error}</p>}
-        {!loading && !list.length && <p className="rounded-2xl bg-white/80 p-4">Nenhum match encontrado.</p>}
+        {error && (
+          <p role="alert" className="font-medium text-primary-dark">
+            {error}
+          </p>
+        )}
+        {!loading && !list.length && (
+          <p className="rounded-2xl bg-white/80 p-4">
+            Nenhum match encontrado.
+          </p>
+        )}
 
         <div className="grid gap-5 lg:grid-cols-2">
           {list.map((m) => (
             <PetCard key={m.id} pet={m} favorite>
               <div className="flex flex-wrap gap-3 pt-1">
-                <button onClick={() => setSelected(m)} className={contactBtn}><ChatIcon size={20} /> Contato</button>
-                <button onClick={() => setToRemove(m)} className={removeBtn}><TrashIcon size={20} /> Remover</button>
+                <button onClick={() => setSelected(m)} className={contactBtn}>
+                  <ChatIcon size={20} /> Contato
+                </button>
+                <button onClick={() => setToRemove(m)} className={removeBtn}>
+                  <TrashIcon size={20} /> Remover
+                </button>
               </div>
             </PetCard>
           ))}
         </div>
       </section>
 
-      <Modal open={!!selected} title={`Falar sobre ${selected?.name ?? ""}`} onClose={() => setSelected(null)}>
+      <Modal
+        open={!!selected}
+        title={`Falar sobre ${selected?.name ?? ""}`}
+        onClose={() => setSelected(null)}
+      >
         <p>Responsável: {selected?.contactName}</p>
         <p>Telefone: {selected?.contactPhone}</p>
         <p>Cidade: {selected?.city}</p>

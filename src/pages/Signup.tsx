@@ -15,7 +15,11 @@ export default function Signup() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [error, setError] = useState("");
-  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<SignupData>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<SignupData>({
     resolver: zodResolver(signupSchema),
   });
 
@@ -40,29 +44,81 @@ export default function Signup() {
 
   return (
     <AuthLayout title="Criar sua conta">
-      <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-4">
-        <Field id="name" label="Nome" icon={<UserIcon />} error={errors.name?.message}>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        noValidate
+        className="flex flex-col gap-4"
+      >
+        <Field
+          id="name"
+          label="Nome"
+          icon={<UserIcon />}
+          error={errors.name?.message}
+        >
           <input {...props("name")} autoComplete="name" className={inputCls} />
         </Field>
-        <Field id="email" label="E-mail" icon={<MailIcon />} error={errors.email?.message}>
-          <input {...props("email")} type="email" autoComplete="email" placeholder="voce@email.com" className={inputCls} />
+        <Field
+          id="email"
+          label="E-mail"
+          icon={<MailIcon />}
+          error={errors.email?.message}
+        >
+          <input
+            {...props("email")}
+            type="email"
+            autoComplete="email"
+            placeholder="voce@email.com"
+            className={inputCls}
+          />
         </Field>
-        <Field id="password" label="Senha (mín. 6 caracteres)" icon={<LockIcon />} error={errors.password?.message}>
-          <input {...props("password")} type="password" autoComplete="new-password" className={inputCls} />
+        <Field
+          id="password"
+          label="Senha (mín. 6 caracteres)"
+          icon={<LockIcon />}
+          error={errors.password?.message}
+        >
+          <input
+            {...props("password")}
+            type="password"
+            autoComplete="new-password"
+            className={inputCls}
+          />
         </Field>
-        <Field id="confirm" label="Confirmar senha" icon={<LockIcon />} error={errors.confirm?.message}>
-          <input {...props("confirm")} type="password" autoComplete="new-password" className={inputCls} />
+        <Field
+          id="confirm"
+          label="Confirmar senha"
+          icon={<LockIcon />}
+          error={errors.confirm?.message}
+        >
+          <input
+            {...props("confirm")}
+            type="password"
+            autoComplete="new-password"
+            className={inputCls}
+          />
         </Field>
         {error && (
-          <div role="alert" className="flex items-start gap-2 rounded-xl border border-primary bg-primary/10 p-3 text-ink">
-            <span className="mt-0.5 text-primary-dark"><AlertIcon /></span>
+          <div
+            role="alert"
+            className="flex items-start gap-2 rounded-xl border border-primary bg-primary/10 p-3 text-ink"
+          >
+            <span className="mt-0.5 text-primary-dark">
+              <AlertIcon />
+            </span>
             <p>{error}</p>
           </div>
         )}
-        <button type="submit" disabled={isSubmitting} className={btnPrimary}>{isSubmitting ? "Criando..." : "Criar conta"}</button>
+        <button type="submit" disabled={isSubmitting} className={btnPrimary}>
+          {isSubmitting ? "Criando..." : "Criar conta"}
+        </button>
       </form>
       <GoogleButton onSuccess={() => navigate("/", { replace: true })} />
-      <p className="text-center">Já tem conta? <Link to="/login" className="font-bold underline">Entrar</Link></p>
+      <p className="text-center">
+        Já tem conta?{" "}
+        <Link to="/login" className="-my-2 inline-block py-2 font-bold underline">
+          Entrar
+        </Link>
+      </p>
     </AuthLayout>
   );
 }

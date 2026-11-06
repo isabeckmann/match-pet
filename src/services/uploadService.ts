@@ -1,4 +1,3 @@
-
 export async function uploadFoto(foto: File): Promise<string> {
   const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
   const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
@@ -28,14 +27,14 @@ export async function uploadFoto(foto: File): Promise<string> {
     {
       method: "POST",
       body: formData,
-    }
+    },
   );
 
   const dados = await resposta.json();
 
   if (!resposta.ok) {
     throw new Error(
-      dados.error?.message || "Não foi possível enviar a imagem."
+      dados.error?.message || "Não foi possível enviar a imagem.",
     );
   }
 

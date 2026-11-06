@@ -15,10 +15,18 @@ export default function GoogleButton({ onSuccess }: { onSuccess: () => void }) {
   };
   return (
     <div className="space-y-2">
-      <button type="button" onClick={click} className="flex w-full items-center justify-center gap-3 rounded-full border-2 border-ink bg-white px-6 py-3 text-lg font-semibold text-ink hover:bg-cream">
+      <button
+        type="button"
+        onClick={click}
+        className="flex w-full items-center justify-center gap-3 rounded-full border-2 border-ink bg-white px-6 py-3 text-lg font-semibold text-ink hover:bg-cream"
+      >
         <GoogleIcon /> Continuar com Google
       </button>
-      {error && <p role="alert" className="font-medium text-primary-dark">{error}</p>}
+      {error && (
+        <p role="alert" className="font-medium text-primary-dark">
+          {error}
+        </p>
+      )}
     </div>
   );
 }

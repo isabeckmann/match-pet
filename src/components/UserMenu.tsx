@@ -9,7 +9,13 @@ const item =
 
 // Menu da conta: botão com a inicial do usuário que abre um painel (padrão "disclosure").
 // Em telas pequenas (< sm) o painel também traz os links de navegação do site.
-export default function UserMenu({ user, links }: { user: User; links: { to: string; label: string }[] }) {
+export default function UserMenu({
+  user,
+  links,
+}: {
+  user: User;
+  links: { to: string; label: string }[];
+}) {
   const [open, setOpen] = useState(false);
   const wrap = useRef<HTMLDivElement>(null);
   const trigger = useRef<HTMLButtonElement>(null);
@@ -48,16 +54,27 @@ export default function UserMenu({ user, links }: { user: User; links: { to: str
         onClick={() => setOpen((o) => !o)}
         className="flex h-11 items-center gap-1 rounded-full p-1 pr-2 text-ink hover:bg-white/70"
       >
-        <span aria-hidden="true" className="flex h-9 w-9 items-center justify-center rounded-full bg-sage font-bold">
+        <span
+          aria-hidden="true"
+          className="flex h-9 w-9 items-center justify-center rounded-full bg-sage font-bold"
+        >
           {initial}
         </span>
-        <ChevronDownIcon size={18} className={`transition ${open ? "rotate-180" : ""}`} />
+        <ChevronDownIcon
+          size={18}
+          className={`transition ${open ? "rotate-180" : ""}`}
+        />
       </button>
 
       {open && (
-        <div id="user-menu" className="absolute right-0 z-20 mt-2 w-64 rounded-2xl border border-ink/10 bg-white p-2 shadow-xl">
+        <div
+          id="user-menu"
+          className="absolute right-0 z-20 mt-2 w-64 rounded-2xl border border-ink/10 bg-white p-2 shadow-xl"
+        >
           <div className="border-b border-ink/10 px-3 pb-2 pt-1">
-            <p className="truncate font-bold">{user.displayName ?? "Minha conta"}</p>
+            <p className="truncate font-bold">
+              {user.displayName ?? "Minha conta"}
+            </p>
             {user.email && <p className="truncate text-sm">{user.email}</p>}
           </div>
           <ul className="mt-2 flex flex-col gap-1 border-b border-ink/10 pb-2 sm:hidden">
@@ -67,7 +84,9 @@ export default function UserMenu({ user, links }: { user: User; links: { to: str
                   to={to}
                   end={to === "/"}
                   onClick={() => setOpen(false)}
-                  className={({ isActive }) => `${item} ${isActive ? "bg-sage font-bold" : ""}`}
+                  className={({ isActive }) =>
+                    `${item} ${isActive ? "bg-sage font-bold" : ""}`
+                  }
                 >
                   {label}
                 </NavLink>

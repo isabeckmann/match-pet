@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm, type UseFormRegister } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Field from "../components/Field";
@@ -75,6 +75,10 @@ export default function RegisterPet() {
   const [badPhoto, setBadPhoto] = useState("");
   const [caracteristica, setCaracteristica] = useState("");
   const [caracteristicas, setCaracteristicas] = useState<string[]>([]);
+  const [aviso, setAviso] = useState(""); // mensagem falada pelo leitor de tela e mostrada na tela
+  const inputCaracteristica = useRef<HTMLInputElement>(null);
+  const listaCaracteristicas = useRef<HTMLDivElement>(null);
+  const focoAposRemover = useRef<number | null>(null);
   const [uploadKey, setUploadKey] = useState(0); // remonta o PhotoUpload depois de cadastrar
   const {
     register, handleSubmit, reset, watch, setValue,
@@ -105,15 +109,31 @@ export default function RegisterPet() {
     }
   };
 
+  // Depois de remover, o foco vai para o "×" do vizinho (ou para o campo, se não sobrou nenhum).
+  // Sem isso o botão some e o foco cai no <body>, e quem usa teclado volta ao topo da página.
+  useEffect(() => {
+    if (focoAposRemover.current === null) return;
+    const botoes = listaCaracteristicas.current?.querySelectorAll<HTMLButtonElement>("button");
+    const alvo = botoes?.length ? botoes[Math.min(focoAposRemover.current, botoes.length - 1)] : null;
+    (alvo ?? inputCaracteristica.current)?.focus();
+    focoAposRemover.current = null;
+  }, [caracteristicas]);
+
   function adicionarCaracteristica() {
     const nova = caracteristica.trim();
 
-    if (!nova || caracteristicas.length >= 5) return;
+    if (!nova) return;
+
+    if (caracteristicas.length >= 5) {
+      setAviso("Limite de 5 características atingido. Remova uma para adicionar outra.");
+      return;
+    }
 
     // Evita características repetidas
     if (caracteristicas.some(
       (item) => item.toLowerCase() === nova.toLowerCase()
     )) {
+      setAviso(`"${nova}" já foi adicionada.`);
       return;
     }
 
@@ -127,12 +147,16 @@ export default function RegisterPet() {
     });
 
     setCaracteristica("");
+    setAviso(`${nova} adicionada. ${atualizadas.length} de 5.`);
   }
 
   function removerCaracteristica(item: string) {
     const atualizadas = caracteristicas.filter(
       (caracteristica) => caracteristica !== item
     );
+
+    focoAposRemover.current = caracteristicas.indexOf(item);
+    setAviso(`${item} removida. ${atualizadas.length} de 5.`);
 
     setCaracteristicas(atualizadas);
 
@@ -186,9 +210,14 @@ export default function RegisterPet() {
                   <div className="flex gap-2">
                     <input
                       id="temperament"
+                      ref={inputCaracteristica}
                       type="text"
                       value={caracteristica}
-                      onChange={(e) => setCaracteristica(e.target.value)}
+                      aria-describedby="temperament-dica"
+                      onChange={(e) => {
+                        setCaracteristica(e.target.value);
+                        setAviso("");
+                      }}
                       onKeyDown={(e) => {
                         if (e.key === "Enter") {
                           e.preventDefault();
@@ -196,29 +225,29 @@ export default function RegisterPet() {
                         }
                       }}
                       placeholder="Ex.: Carinhoso, brincalhão..."
-                      disabled={caracteristicas.length >= 5}
                       className={`${input} min-w-0`}
                     />
 
                     <button
                       type="button"
                       onClick={adicionarCaracteristica}
-                      disabled={!caracteristica.trim() || caracteristicas.length >= 5}
-                      className="rounded-xl bg-primary-dark px-4 font-semibold text-white disabled:opacity-50"
+                      aria-disabled={!caracteristica.trim() || caracteristicas.length >= 5}
+                      className="rounded-xl bg-primary-dark px-4 font-semibold text-white aria-disabled:opacity-50"
                     >
                       Adicionar
                     </button>
                   </div>
 
-                  <p className="text-sm opacity-70">
+                  <p id="temperament-dica" className="text-sm opacity-70">
                     Adicione até 5 características da personalidade do pet.
                   </p>
+                  <p role="status" aria-live="polite" className="min-h-5 text-sm font-medium">{aviso}</p>
 
-                  <div className="flex flex-wrap gap-2">
+                  <div ref={listaCaracteristicas} className="flex flex-wrap gap-2">
                     {caracteristicas.map((item) => (
                       <span
                         key={item}
-                        className="flex items-center gap-2 rounded-full bg-sage px-3 py-1 text-sm"
+                        className="flex items-center gap-1 rounded-full bg-sage py-0.5 pl-3 pr-1 text-sm"
                       >
                         {item}
 
@@ -226,7 +255,7 @@ export default function RegisterPet() {
                           type="button"
                           onClick={() => removerCaracteristica(item)}
                           aria-label={`Remover ${item}`}
-                          className="font-bold"
+                          className="grid h-7 w-7 place-items-center rounded-full text-lg font-bold leading-none hover:bg-ink/10"
                         >
                           ×
                         </button>
@@ -342,4 +371,3 @@ export default function RegisterPet() {
     </>
   );
 }
-

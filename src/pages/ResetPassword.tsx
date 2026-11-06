@@ -5,9 +5,16 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import AuthLayout from "../components/AuthLayout";
 import Field from "../components/Field";
 import { AlertIcon, LockIcon } from "../components/icons";
-import { resetPasswordSchema, type ResetPasswordData } from "../lib/authSchemas";
+import {
+  resetPasswordSchema,
+  type ResetPasswordData,
+} from "../lib/authSchemas";
 import { btnPrimary, inputCls } from "../lib/styles";
-import { authError, checkResetCode, confirmReset } from "../services/authService";
+import {
+  authError,
+  checkResetCode,
+  confirmReset,
+} from "../services/authService";
 
 type Status = "checking" | "ready" | "done" | "invalid";
 
@@ -23,7 +30,11 @@ export default function ResetPassword() {
   const [status, setStatus] = useState<Status>(code ? "checking" : "invalid");
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
-  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<ResetPasswordData>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<ResetPasswordData>({
     resolver: zodResolver(resetPasswordSchema),
   });
 
@@ -59,7 +70,12 @@ export default function ResetPassword() {
       setStatus("done");
     } catch (e) {
       setError(authError(e));
-      if (["auth/expired-action-code", "auth/invalid-action-code"].some((c) => String(e).includes(c))) setStatus("invalid");
+      if (
+        ["auth/expired-action-code", "auth/invalid-action-code"].some((c) =>
+          String(e).includes(c),
+        )
+      )
+        setStatus("invalid");
     }
   };
 
@@ -74,11 +90,21 @@ export default function ResetPassword() {
   if (status === "invalid") {
     return (
       <AuthLayout title="Link inválido">
-        <div role="alert" className="flex items-start gap-2 rounded-xl border border-primary bg-primary/10 p-3 text-ink">
-          <span className="mt-0.5 text-primary-dark"><AlertIcon /></span>
-          <p>{error || "Este link de redefinição é inválido ou já foi usado. Peça um novo na tela de login."}</p>
+        <div
+          role="alert"
+          className="flex items-start gap-2 rounded-xl border border-primary bg-primary/10 p-3 text-ink"
+        >
+          <span className="mt-0.5 text-primary-dark">
+            <AlertIcon />
+          </span>
+          <p>
+            {error ||
+              "Este link de redefinição é inválido ou já foi usado. Peça um novo na tela de login."}
+          </p>
         </div>
-        <Link to="/login" className={`${btnPrimary} block text-center`}>Voltar para o login</Link>
+        <Link to="/login" className={`${btnPrimary} block text-center`}>
+          Voltar para o login
+        </Link>
       </AuthLayout>
     );
   }
@@ -86,29 +112,66 @@ export default function ResetPassword() {
   if (status === "done") {
     return (
       <AuthLayout title="Senha alterada">
-        <p role="status" className="rounded-xl bg-tag/30 p-3 font-medium">Pronto! Sua senha foi redefinida. Entre com a nova senha.</p>
-        <Link to="/login" className={`${btnPrimary} block text-center`}>Ir para o login</Link>
+        <p role="status" className="rounded-xl bg-tag/30 p-3 font-medium">
+          Pronto! Sua senha foi redefinida. Entre com a nova senha.
+        </p>
+        <Link to="/login" className={`${btnPrimary} block text-center`}>
+          Ir para o login
+        </Link>
       </AuthLayout>
     );
   }
 
   return (
     <AuthLayout title="Criar nova senha">
-      <p>Defina uma nova senha para <strong>{email}</strong>.</p>
-      <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-4">
-        <Field id="password" label="Nova senha (mín. 8 caracteres, com letra e número)" icon={<LockIcon />} error={errors.password?.message}>
-          <input {...props("password")} type="password" autoComplete="new-password" className={inputCls} />
+      <p>
+        Defina uma nova senha para <strong>{email}</strong>.
+      </p>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        noValidate
+        className="flex flex-col gap-4"
+      >
+        <Field
+          id="password"
+          label="Nova senha (mín. 8 caracteres, com letra e número)"
+          icon={<LockIcon />}
+          error={errors.password?.message}
+        >
+          <input
+            {...props("password")}
+            type="password"
+            autoComplete="new-password"
+            className={inputCls}
+          />
         </Field>
-        <Field id="confirm" label="Confirmar nova senha" icon={<LockIcon />} error={errors.confirm?.message}>
-          <input {...props("confirm")} type="password" autoComplete="new-password" className={inputCls} />
+        <Field
+          id="confirm"
+          label="Confirmar nova senha"
+          icon={<LockIcon />}
+          error={errors.confirm?.message}
+        >
+          <input
+            {...props("confirm")}
+            type="password"
+            autoComplete="new-password"
+            className={inputCls}
+          />
         </Field>
         {error && (
-          <div role="alert" className="flex items-start gap-2 rounded-xl border border-primary bg-primary/10 p-3 text-ink">
-            <span className="mt-0.5 text-primary-dark"><AlertIcon /></span>
+          <div
+            role="alert"
+            className="flex items-start gap-2 rounded-xl border border-primary bg-primary/10 p-3 text-ink"
+          >
+            <span className="mt-0.5 text-primary-dark">
+              <AlertIcon />
+            </span>
             <p>{error}</p>
           </div>
         )}
-        <button type="submit" disabled={isSubmitting} className={btnPrimary}>{isSubmitting ? "Salvando..." : "Salvar nova senha"}</button>
+        <button type="submit" disabled={isSubmitting} className={btnPrimary}>
+          {isSubmitting ? "Salvando..." : "Salvar nova senha"}
+        </button>
       </form>
     </AuthLayout>
   );
