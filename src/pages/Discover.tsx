@@ -84,7 +84,7 @@ export default function Discover() {
           Adote. Cuide. Faça a diferença. <HeartIcon className="text-coral" />
         </p>
 
-        <div className="inline-flex items-center gap-2 rounded-full border border-ink/25 bg-white/80 py-2 pl-4 pr-3 shadow-sm">
+        <div className="inline-flex items-center gap-2 rounded-full border border-ink/60 bg-white/80 py-2 pl-4 pr-3 shadow-sm">
           <PawIcon size={22} />
           <label htmlFor="species" className="font-medium">Espécie:</label>
           <div className="relative">

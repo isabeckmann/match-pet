@@ -74,7 +74,7 @@ export default function Matches() {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Buscar por nome ou raça..."
-                className="w-full rounded-full border border-ink/20 bg-white/90 py-3.5 pl-14 pr-5 text-lg text-ink shadow-sm placeholder:text-ink/75"
+                className="w-full rounded-full border border-ink/60 bg-white/90 py-3.5 pl-14 pr-5 text-lg text-ink shadow-sm placeholder:text-ink/75"
               />
             </div>
           </div>
