@@ -12,7 +12,10 @@ export const signupSchema = z
     password: z.string().min(6, "A senha deve ter no mínimo 6 caracteres."),
     confirm: z.string().min(1, "Confirme a senha."),
   })
-  .refine((d) => d.password === d.confirm, { path: ["confirm"], message: "As senhas não conferem." });
+  .refine((d) => d.password === d.confirm, {
+    path: ["confirm"],
+    message: "As senhas não conferem.",
+  });
 
 // Regra para a senha NOVA (redefinir): 8+ caracteres, com letra e número
 const strongPassword = z
@@ -26,7 +29,10 @@ export const resetPasswordSchema = z
     password: strongPassword,
     confirm: z.string().min(1, "Confirme a senha."),
   })
-  .refine((d) => d.password === d.confirm, { path: ["confirm"], message: "As senhas não conferem." });
+  .refine((d) => d.password === d.confirm, {
+    path: ["confirm"],
+    message: "As senhas não conferem.",
+  });
 
 export type ResetPasswordData = z.infer<typeof resetPasswordSchema>;
 export type LoginData = z.infer<typeof loginSchema>;

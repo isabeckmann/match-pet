@@ -10,7 +10,10 @@ export default function PhotoUpload({ onUpload }: PhotoUploadProps) {
   const [preview, setPreview] = useState("");
   const [carregando, setCarregando] = useState(false);
   const [enviada, setEnviada] = useState(false);
-  const [mensagem, setMensagem] = useState<{ ok: boolean; texto: string } | null>(null);
+  const [mensagem, setMensagem] = useState<{
+    ok: boolean;
+    texto: string;
+  } | null>(null);
 
   // Libera a memória do preview anterior ao trocar de foto ou desmontar
   useEffect(() => {
@@ -25,7 +28,10 @@ export default function PhotoUpload({ onUpload }: PhotoUploadProps) {
     if (!arquivo) return;
 
     if (!["image/jpeg", "image/png", "image/webp"].includes(arquivo.type)) {
-      setMensagem({ ok: false, texto: "Formato inválido. Use JPG, PNG ou WEBP." });
+      setMensagem({
+        ok: false,
+        texto: "Formato inválido. Use JPG, PNG ou WEBP.",
+      });
       event.target.value = "";
       return;
     }
@@ -58,7 +64,10 @@ export default function PhotoUpload({ onUpload }: PhotoUploadProps) {
       setEnviada(true);
       setMensagem({ ok: true, texto: "Foto enviada com sucesso!" });
     } catch (error) {
-      setMensagem({ ok: false, texto: "Erro ao enviar a foto. Tente novamente." });
+      setMensagem({
+        ok: false,
+        texto: "Erro ao enviar a foto. Tente novamente.",
+      });
       console.error(error);
     } finally {
       setCarregando(false);
@@ -83,17 +92,24 @@ export default function PhotoUpload({ onUpload }: PhotoUploadProps) {
         >
           {preview ? (
             <span className="relative block w-full">
-              <img src={preview} alt="Prévia da foto selecionada" className="aspect-[4/3] w-full object-cover" />
+              <img
+                src={preview}
+                alt="Prévia da foto selecionada"
+                className="aspect-[4/3] w-full object-cover"
+              />
               <span className="absolute bottom-3 right-3 rounded-full bg-ink px-4 py-2 text-sm font-semibold text-white">
                 Trocar foto
               </span>
             </span>
           ) : (
             <span className="flex flex-col items-center gap-1 p-6">
-              <span aria-hidden="true" className="text-4xl">📷</span>
+              <span aria-hidden="true" className="text-4xl">
+                📷
+              </span>
               <span className="font-bold">Toque para escolher uma foto</span>
               <span id="foto-dica" className="text-sm opacity-80">
-                JPG, PNG ou WEBP, até 5 MB. Uma foto nítida e bem iluminada aumenta as chances de adoção.
+                JPG, PNG ou WEBP, até 5 MB. Uma foto nítida e bem iluminada
+                aumenta as chances de adoção.
               </span>
             </span>
           )}
@@ -112,7 +128,11 @@ export default function PhotoUpload({ onUpload }: PhotoUploadProps) {
         disabled={!foto || carregando || enviada}
         className="min-h-12 self-start rounded-full bg-primary-dark px-6 py-3 font-semibold text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink disabled:cursor-not-allowed disabled:opacity-60"
       >
-        {carregando ? "Enviando..." : enviada ? "Foto enviada ✓" : "Enviar foto"}
+        {carregando
+          ? "Enviando..."
+          : enviada
+            ? "Foto enviada ✓"
+            : "Enviar foto"}
       </button>
 
       <p

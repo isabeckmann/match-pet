@@ -28,6 +28,8 @@ export default function Discover() {
   const [celebrate, setCelebrate] = useState<Pet | null>(null);
   const navigate = useNavigate();
   const timer = useRef<number | undefined>(undefined);
+  const wrap = useRef<HTMLDivElement>(null); // área do card
+  const restoreFocus = useRef(false); // o foco estava no card quando o pet foi passado?
 
   // traz do servidor os matches deste usuário (vale também em outro dispositivo)
   useEffect(() => {
@@ -46,10 +48,38 @@ export default function Discover() {
   };
 
   const swipe = (d: Dir) => {
-    if (exit) return;
+    if (exit || !pet) return;
+    restoreFocus.current = !!wrap.current?.contains(document.activeElement);
     if (d === "left") setTrail((t) => t + 1);
     setExit(d);
   };
+
+  // Teclado: ← passa, → dá match (atalho extra; os botões continuam sendo o caminho principal)
+  const swipeRef = useRef(swipe);
+  useEffect(() => {
+    swipeRef.current = swipe;
+  });
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
+      if (e.defaultPrevented || e.repeat || e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
+      // não atrapalha quem está digitando, usando o seletor de espécie ou com um modal aberto
+      if ((e.target as HTMLElement).closest("input, textarea, select, [contenteditable]")) return;
+      if (document.querySelector("dialog[open]")) return;
+      e.preventDefault();
+      swipeRef.current(e.key === "ArrowRight" ? "right" : "left");
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, []);
+
+  // O botão que foi apertado some junto com o card antigo: devolve o foco ao novo card
+  // (no match, só depois que a celebração for fechada).
+  useEffect(() => {
+    if (!restoreFocus.current || celebrate || exit) return;
+    restoreFocus.current = false;
+    wrap.current?.querySelector<HTMLElement>("button")?.focus();
+  }, [pet?.id, celebrate, exit]);
 
   // chamado quando a animação de saída termina
   const finish = async (d: Dir) => {
@@ -92,7 +122,7 @@ export default function Discover() {
               id="species"
               value={species}
               onChange={(e) => setSpecies(e.target.value)}
-              className="appearance-none bg-transparent pr-6 font-bold"
+              className="min-h-11 appearance-none bg-transparent pr-6 font-bold"
             >
               <option value="">Todas</option>
               <option value="dog">Cachorros</option>
@@ -114,16 +144,20 @@ export default function Discover() {
         {!loading && !error && !pet && <p className={panel}>Não há mais pets por aqui. Volte mais tarde!</p>}
 
         {pet && (
-          <div className="relative mx-auto max-w-3xl">
+          <div ref={wrap} className="relative mx-auto max-w-3xl">
             {trail > 0 && <PawTrail key={trail} />}
             <SwipeCard key={`${pet.id}-${attempt}`} exit={exit} onSwipe={swipe} onExited={finish}>
               <DiscoverCard pet={pet}>
                 <div className="flex gap-3 pt-2">
-                  <button onClick={() => swipe("left")} disabled={!!exit} className={`${btn} bg-emphasis text-ink`}>Passar</button>
-                  <button onClick={() => swipe("right")} disabled={!!exit} className={`${btn} bg-primary-dark text-white`}>Match ♥</button>
+                  <button onClick={() => swipe("left")} disabled={!!exit} aria-keyshortcuts="ArrowLeft" className={`${btn} bg-emphasis text-ink`}>Passar</button>
+                  <button onClick={() => swipe("right")} disabled={!!exit} aria-keyshortcuts="ArrowRight" className={`${btn} bg-primary-dark text-white`}>Match ♥</button>
                 </div>
               </DiscoverCard>
             </SwipeCard>
+            <p className="mt-3 hidden text-sm font-medium sm:block">
+              Dica: use as setas <span aria-hidden="true">←</span><span className="sr-only">esquerda</span> e{" "}
+              <span aria-hidden="true">→</span><span className="sr-only">direita</span> do teclado para passar ou dar match.
+            </p>
           </div>
         )}
       </section>

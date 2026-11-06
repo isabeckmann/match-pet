@@ -20,27 +20,27 @@ React, TypeScript, Vite, Tailwind CSS, React Router, React Hook Form, Zod, Axios
 
 ## APIs usadas
 
-| API | Para quê | Operação |
-|---|---|---|
-| TheDogAPI | raças, fotos e temperamento de cães | GET |
-| TheCatAPI | raças, fotos e temperamento de gatos | GET |
-| MockAPI | guardar matches e pets cadastrados | GET, POST, DELETE |
-| Cloudinary | upload da foto do pet cadastrado | POST |
+| API        | Para quê                             | Operação          |
+| ---------- | ------------------------------------ | ----------------- |
+| TheDogAPI  | raças, fotos e temperamento de cães  | GET               |
+| TheCatAPI  | raças, fotos e temperamento de gatos | GET               |
+| MockAPI    | guardar matches e pets cadastrados   | GET, POST, DELETE |
+| Cloudinary | upload da foto do pet cadastrado     | POST              |
 
 Nome, idade, cidade e contato dos pets vindos da TheDogAPI e da TheCatAPI são gerados no próprio código, porque essas APIs não trazem esses dados.
 
 ## Requisitos mínimos
 
-| Requisito | Onde está |
-|---|---|
-| 3 telas responsivas | Descobrir, Meus Matches e Cadastrar pet (além de Login, Criar conta e Redefinir senha) |
-| 2 componentes reutilizáveis | `PetCard`, `Modal`, `Field`, `AuthLayout`, `Navbar`, entre outros em `src/components` |
-| 3 interações | filtro por espécie, busca nos matches, modal de contato e de confirmação, menu da conta, swipe/arrastar o card |
-| Formulário com 5+ campos e validação | Cadastrar pet (Zod + React Hook Form, mensagens de erro por campo) |
-| API com GET + 2 entre POST/PUT/PATCH/DELETE | GET (TheDogAPI, TheCatAPI, MockAPI), POST (matches, pets, foto) e DELETE (matches) |
-| Acessibilidade (WCAG AA / Lighthouse) | veja a seção abaixo |
-| Versionamento de todos os integrantes | histórico de commits e Pull Requests no GitHub |
-| Publicado em produção | Vercel (link no topo) |
+| Requisito                                   | Onde está                                                                                                      |
+| ------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| 3 telas responsivas                         | Descobrir, Meus Matches e Cadastrar pet (além de Login, Criar conta e Redefinir senha)                         |
+| 2 componentes reutilizáveis                 | `PetCard`, `Modal`, `Field`, `AuthLayout`, `Navbar`, entre outros em `src/components`                          |
+| 3 interações                                | filtro por espécie, busca nos matches, modal de contato e de confirmação, menu da conta, swipe/arrastar o card |
+| Formulário com 5+ campos e validação        | Cadastrar pet (Zod + React Hook Form, mensagens de erro por campo)                                             |
+| API com GET + 2 entre POST/PUT/PATCH/DELETE | GET (TheDogAPI, TheCatAPI, MockAPI), POST (matches, pets, foto) e DELETE (matches)                             |
+| Acessibilidade (WCAG AA / Lighthouse)       | veja a seção abaixo                                                                                            |
+| Versionamento de todos os integrantes       | histórico de commits e Pull Requests no GitHub                                                                 |
+| Publicado em produção                       | Vercel (link no topo)                                                                                          |
 
 ## Acessibilidade
 
@@ -153,25 +153,25 @@ Para conferir, abra no navegador `https://SEU-CODIGO.mockapi.io/match-pet/matche
 
 ## Problemas comuns
 
-| Sintoma | Causa provável | Solução |
-|---|---|---|
-| Erro 400 ao dar match ou cadastrar | `VITE_MOCKAPI_URL` termina em `/matches` ou `/pets` | Deixe a URL só até `/match-pet` e reinicie o servidor |
-| Erro 404 | Nome do recurso diferente na MockAPI | Os recursos precisam se chamar `matches` e `pets`, em minúsculas |
-| Erro 401 ao carregar os pets | Chave da TheDogAPI ou da TheCatAPI errada ou ausente | Confira o `.env` e reinicie o servidor |
-| Erro 429 | Limite de requisições do plano gratuito | Aguarde alguns minutos |
-| Variável aparece como `undefined` | `.env` com nome errado ou fora da pasta certa | O arquivo deve se chamar `.env` (no Windows, confira que não virou `.env.txt`) e ficar na mesma pasta do `package.json` |
-| Login com Google: "Domínio não autorizado" | Domínio da Vercel fora do Firebase | Adicione em Authentication > Settings > Authorized domains |
-| Foto não envia | Variáveis do Cloudinary ausentes ou preset não é *Unsigned* | Confira `VITE_CLOUDINARY_*` e o modo do preset |
-| Pet cadastrado não aparece para mim | O dono não vê o próprio pet em "Descobrir" | Entre com outra conta para ver o pet |
+| Sintoma                                    | Causa provável                                              | Solução                                                                                                                 |
+| ------------------------------------------ | ----------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| Erro 400 ao dar match ou cadastrar         | `VITE_MOCKAPI_URL` termina em `/matches` ou `/pets`         | Deixe a URL só até `/match-pet` e reinicie o servidor                                                                   |
+| Erro 404                                   | Nome do recurso diferente na MockAPI                        | Os recursos precisam se chamar `matches` e `pets`, em minúsculas                                                        |
+| Erro 401 ao carregar os pets               | Chave da TheDogAPI ou da TheCatAPI errada ou ausente        | Confira o `.env` e reinicie o servidor                                                                                  |
+| Erro 429                                   | Limite de requisições do plano gratuito                     | Aguarde alguns minutos                                                                                                  |
+| Variável aparece como `undefined`          | `.env` com nome errado ou fora da pasta certa               | O arquivo deve se chamar `.env` (no Windows, confira que não virou `.env.txt`) e ficar na mesma pasta do `package.json` |
+| Login com Google: "Domínio não autorizado" | Domínio da Vercel fora do Firebase                          | Adicione em Authentication > Settings > Authorized domains                                                              |
+| Foto não envia                             | Variáveis do Cloudinary ausentes ou preset não é _Unsigned_ | Confira `VITE_CLOUDINARY_*` e o modo do preset                                                                          |
+| Pet cadastrado não aparece para mim        | O dono não vê o próprio pet em "Descobrir"                  | Entre com outra conta para ver o pet                                                                                    |
 
 ## Scripts
 
-| Comando | O que faz |
-|---|---|
-| `npm run dev` | servidor de desenvolvimento |
-| `npm run build` | build de produção |
-| `npm run preview` | visualiza o build localmente |
-| `npm run lint` | ESLint, incluindo regras de acessibilidade |
+| Comando           | O que faz                                  |
+| ----------------- | ------------------------------------------ |
+| `npm run dev`     | servidor de desenvolvimento                |
+| `npm run build`   | build de produção                          |
+| `npm run preview` | visualiza o build localmente               |
+| `npm run lint`    | ESLint, incluindo regras de acessibilidade |
 
 ## Publicação na Vercel
 

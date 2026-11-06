@@ -13,9 +13,14 @@ const read = (uid: string): Match[] => {
     return [];
   }
 };
-const write = (uid: string, m: Match[]) => localStorage.setItem(cacheKey(uid), JSON.stringify(m));
+const write = (uid: string, m: Match[]) =>
+  localStorage.setItem(cacheKey(uid), JSON.stringify(m));
 
-type MatchRecord = Omit<Match, "id" | "remoteId"> & { id: string; petId: string; userId: string };
+type MatchRecord = Omit<Match, "id" | "remoteId"> & {
+  id: string;
+  petId: string;
+  userId: string;
+};
 
 export const matchedIds = (uid: string) => read(uid).map((m) => m.id);
 
@@ -23,8 +28,12 @@ export const matchedIds = (uid: string) => read(uid).map((m) => m.id);
 export async function getMatches(uid: string): Promise<Match[]> {
   const data = await getList<MatchRecord>(`${API}/matches`, { userId: uid });
   const matches: Match[] = data
-    .filter((r) => r.userId === uid && r.petId) 
-    .map(({ id, petId, userId: _u, ...pet }) => ({ ...pet, id: petId, remoteId: id }));
+    .filter((r) => r.userId === uid && r.petId)
+    .map(({ id, petId, userId: _u, ...pet }) => ({
+      ...pet,
+      id: petId,
+      remoteId: id,
+    }));
   write(uid, matches);
   return matches;
 }
@@ -32,7 +41,11 @@ export async function getMatches(uid: string): Promise<Match[]> {
 // POST
 export async function addMatch(uid: string, pet: Pet): Promise<Match> {
   const { id: petId, ...rest } = pet;
-  const { data } = await http.post(`${API}/matches`, { ...rest, petId, userId: uid });
+  const { data } = await http.post(`${API}/matches`, {
+    ...rest,
+    petId,
+    userId: uid,
+  });
   const match = { ...pet, remoteId: data.id };
   write(uid, [match, ...read(uid).filter((m) => m.id !== pet.id)]);
   return match;
@@ -45,8 +58,12 @@ export async function removeMatch(uid: string, match: Match): Promise<void> {
   } catch (e) {
     if (!(axios.isAxiosError(e) && e.response?.status === 404)) throw e;
   }
-  write(uid, read(uid).filter((m) => m.id !== match.id));
+  write(
+    uid,
+    read(uid).filter((m) => m.id !== match.id),
+  );
 }
 
 // POST (cadastro de pet, vinculado ao usuário)
-export const registerPet = (uid: string, form: PetFormData): Promise<Pet> => createMyPet(uid, form);
+export const registerPet = (uid: string, form: PetFormData): Promise<Pet> =>
+  createMyPet(uid, form);

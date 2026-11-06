@@ -1,6 +1,8 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import ProtectedRoute from "./components/ProtectedRoute";
+import RouteFocus from "./components/RouteFocus";
+import SkipLink from "./components/SkipLink";
 import AuthProvider from "./contexts/AuthProvider";
 import Discover from "./pages/Discover";
 import Login from "./pages/Login";
@@ -13,8 +15,10 @@ export default function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
+        <SkipLink />
+        <RouteFocus />
         <Navbar />
-        <main>
+        <main id="conteudo" tabIndex={-1}>
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/criar-conta" element={<Signup />} />

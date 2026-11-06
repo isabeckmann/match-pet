@@ -18,8 +18,10 @@ export async function signup(name: string, email: string, password: string) {
   return user;
 }
 
-export const login = (email: string, password: string) => signInWithEmailAndPassword(auth, email, password);
-export const loginWithGoogle = () => signInWithPopup(auth, new GoogleAuthProvider());
+export const login = (email: string, password: string) =>
+  signInWithEmailAndPassword(auth, email, password);
+export const loginWithGoogle = () =>
+  signInWithPopup(auth, new GoogleAuthProvider());
 
 // Envia o e-mail de redefinição. Se o e-mail não existir, não revelamos isso
 // (evita descobrir quais e-mails têm conta): a tela mostra a mesma mensagem.
@@ -33,10 +35,12 @@ export async function resetPassword(email: string) {
 }
 
 // Confere o código do link (sem consumir) e devolve o e-mail da conta
-export const checkResetCode = (code: string) => verifyPasswordResetCode(auth, code);
+export const checkResetCode = (code: string) =>
+  verifyPasswordResetCode(auth, code);
 
 // Define a nova senha com o código do link (uso único, expira em 1h)
-export const confirmReset = (code: string, newPassword: string) => confirmPasswordReset(auth, code, newPassword);
+export const confirmReset = (code: string, newPassword: string) =>
+  confirmPasswordReset(auth, code, newPassword);
 
 export const logout = () => signOut(auth);
 
@@ -48,13 +52,18 @@ export function authError(e: unknown): string {
       "auth/user-not-found": "E-mail ou senha incorretos.",
       "auth/wrong-password": "E-mail ou senha incorretos.",
       "auth/weak-password": "A senha é muito fraca (mínimo 6 caracteres).",
-      "auth/too-many-requests": "Muitas tentativas. Aguarde um pouco e tente de novo.",
+      "auth/too-many-requests":
+        "Muitas tentativas. Aguarde um pouco e tente de novo.",
       "auth/network-request-failed": "Sem conexão com a internet.",
       "auth/popup-closed-by-user": "Login com Google cancelado.",
-      "auth/unauthorized-domain": "Domínio não autorizado no Firebase (veja Authorized domains).",
-      "auth/operation-not-allowed": "Este método de login não está ativado no Firebase.",
-      "auth/expired-action-code": "Este link expirou. Peça um novo link de redefinição.",
-      "auth/invalid-action-code": "Link inválido ou já utilizado. Peça um novo link de redefinição.",
+      "auth/unauthorized-domain":
+        "Domínio não autorizado no Firebase (veja Authorized domains).",
+      "auth/operation-not-allowed":
+        "Este método de login não está ativado no Firebase.",
+      "auth/expired-action-code":
+        "Este link expirou. Peça um novo link de redefinição.",
+      "auth/invalid-action-code":
+        "Link inválido ou já utilizado. Peça um novo link de redefinição.",
       "auth/user-disabled": "Esta conta está desativada.",
     };
     return m[e.code] ?? `Erro de autenticação (${e.code}).`;

@@ -17,7 +17,12 @@ export default function Login() {
   const from = (useLocation().state as { from?: string } | null)?.from ?? "/";
   const [error, setError] = useState("");
   const [info, setInfo] = useState("");
-  const { register, handleSubmit, getValues, formState: { errors, isSubmitting } } = useForm<LoginData>({
+  const {
+    register,
+    handleSubmit,
+    getValues,
+    formState: { errors, isSubmitting },
+  } = useForm<LoginData>({
     resolver: zodResolver(loginSchema),
   });
 
@@ -46,12 +51,16 @@ export default function Login() {
     setInfo("");
     const email = getValues("email");
     if (!loginSchema.shape.email.safeParse(email).success) {
-      setError("Digite seu e-mail no campo acima para receber o link de redefinição.");
+      setError(
+        "Digite seu e-mail no campo acima para receber o link de redefinição.",
+      );
       return;
     }
     try {
       await resetPassword(email);
-      setInfo("Se existir uma conta com esse e-mail, enviamos um link de redefinição. Confira também o spam.");
+      setInfo(
+        "Se existir uma conta com esse e-mail, enviamos um link de redefinição. Confira também o spam.",
+      );
     } catch (e) {
       setError(authError(e));
     }
@@ -59,25 +68,72 @@ export default function Login() {
 
   return (
     <AuthLayout title="Entrar na sua conta">
-      <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-4">
-        <Field id="email" label="E-mail" icon={<MailIcon />} error={errors.email?.message}>
-          <input {...props("email")} type="email" autoComplete="email" placeholder="voce@email.com" className={inputCls} />
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        noValidate
+        className="flex flex-col gap-4"
+      >
+        <Field
+          id="email"
+          label="E-mail"
+          icon={<MailIcon />}
+          error={errors.email?.message}
+        >
+          <input
+            {...props("email")}
+            type="email"
+            autoComplete="email"
+            placeholder="voce@email.com"
+            className={inputCls}
+          />
         </Field>
-        <Field id="password" label="Senha" icon={<LockIcon />} error={errors.password?.message}>
-          <input {...props("password")} type="password" autoComplete="current-password" className={inputCls} />
+        <Field
+          id="password"
+          label="Senha"
+          icon={<LockIcon />}
+          error={errors.password?.message}
+        >
+          <input
+            {...props("password")}
+            type="password"
+            autoComplete="current-password"
+            className={inputCls}
+          />
         </Field>
-        <button type="button" onClick={forgot} className="self-end font-medium text-ink underline">Esqueceu a senha?</button>
+        <button
+          type="button"
+          onClick={forgot}
+          className="-my-2 py-2 self-end font-medium text-ink underline"
+        >
+          Esqueceu a senha?
+        </button>
         {error && (
-          <div role="alert" className="flex items-start gap-2 rounded-xl border border-primary bg-primary/10 p-3 text-ink">
-            <span className="mt-0.5 text-primary-dark"><AlertIcon /></span>
+          <div
+            role="alert"
+            className="flex items-start gap-2 rounded-xl border border-primary bg-primary/10 p-3 text-ink"
+          >
+            <span className="mt-0.5 text-primary-dark">
+              <AlertIcon />
+            </span>
             <p>{error}</p>
           </div>
         )}
-        {info && <p role="status" className="rounded-xl bg-tag/30 p-3 font-medium">{info}</p>}
-        <button type="submit" disabled={isSubmitting} className={btnPrimary}>{isSubmitting ? "Entrando..." : "Entrar"}</button>
+        {info && (
+          <p role="status" className="rounded-xl bg-tag/30 p-3 font-medium">
+            {info}
+          </p>
+        )}
+        <button type="submit" disabled={isSubmitting} className={btnPrimary}>
+          {isSubmitting ? "Entrando..." : "Entrar"}
+        </button>
       </form>
       <GoogleButton onSuccess={() => navigate(from, { replace: true })} />
-      <p className="text-center">Ainda não tem conta? <Link to="/criar-conta" className="font-bold underline">Criar conta</Link></p>
+      <p className="text-center">
+        Ainda não tem conta?{" "}
+        <Link to="/criar-conta" className="-my-2 inline-block py-2 font-bold underline">
+          Criar conta
+        </Link>
+      </p>
     </AuthLayout>
   );
 }

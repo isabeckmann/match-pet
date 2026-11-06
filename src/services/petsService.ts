@@ -14,8 +14,28 @@ interface Breed {
   gender?: "male" | "female";
 }
 
-const NAMES = ["Thor", "Luna", "Mel", "Bob", "Nina", "Pipoca", "Mike", "Lola", "Bela", "Simba", "Amora", "Fred"];
-const CITIES = ["Santa Maria", "Porto Alegre", "Pelotas", "Caxias do Sul", "Canoas", "Passo Fundo"];
+const NAMES = [
+  "Thor",
+  "Luna",
+  "Mel",
+  "Bob",
+  "Nina",
+  "Pipoca",
+  "Mike",
+  "Lola",
+  "Bela",
+  "Simba",
+  "Amora",
+  "Fred",
+];
+const CITIES = [
+  "Santa Maria",
+  "Porto Alegre",
+  "Pelotas",
+  "Caxias do Sul",
+  "Canoas",
+  "Passo Fundo",
+];
 const PEOPLE = ["Ana Souza", "Carlos Lima", "Marina Reis", "João Pires"];
 
 const dogKey = import.meta.env.VITE_DOG_API_KEY as string | undefined;
@@ -36,9 +56,15 @@ function toPet(b: Breed, species: Pet["species"], i: number): Pet {
     gender: n % 2 === 0 ? "male" : "female",
     ageYears: (n * 3) % 12,
     size: sizeOf(b.weight?.metric),
-    temperament: (b.temperament ?? "Dócil, Carinhoso").split(",").map((t) => t.trim()).slice(0, 4),
+    temperament: (b.temperament ?? "Dócil, Carinhoso")
+      .split(",")
+      .map((t) => t.trim())
+      .slice(0, 4),
     photoUrl: `https://cdn2.the${species}api.com/images/${b.reference_image_id}.jpg`,
-    description: b.description ?? b.bred_for ?? "Um companheiro cheio de energia esperando por um lar.",
+    description:
+      b.description ??
+      b.bred_for ??
+      "Um companheiro cheio de energia esperando por um lar.",
     contactName: PEOPLE[n % PEOPLE.length],
     contactPhone: `(55) 99${String(100 + n).padStart(3, "0")}-${String(1000 + n * 7)}`,
     city: CITIES[n % CITIES.length] || b.city,
@@ -54,14 +80,23 @@ const fromRecord = ({ id, userId: _u, ...pet }: PetRecord): Pet => ({
   temperament: pet.temperament ?? [],
 });
 
-// GET: pets cadastrados por OUTROS usuários. 
+// GET: pets cadastrados por OUTROS usuários.
 export async function getCommunityPets(uid: string): Promise<Pet[]> {
   const data = await getList<PetRecord>(`${API}/pets`, {});
-  return data.filter((r) => r.userId !== uid).map(fromRecord).reverse();
+  return data
+    .filter((r) => r.userId !== uid)
+    .map(fromRecord)
+    .reverse();
 }
 
-export async function createMyPet(uid: string, form: PetFormData): Promise<Pet> {
-  const { data } = await http.post<PetRecord>(`${API}/pets`, { ...form, userId: uid });
+export async function createMyPet(
+  uid: string,
+  form: PetFormData,
+): Promise<Pet> {
+  const { data } = await http.post<PetRecord>(`${API}/pets`, {
+    ...form,
+    userId: uid,
+  });
   const pet = fromRecord({ ...form, ...data, userId: uid } as PetRecord);
 
   // Avisa que a lista de pets foi atualizada
@@ -85,7 +120,10 @@ export async function getPets(uid: string): Promise<Pet[]> {
     list.filter((b) => b.reference_image_id).map((b, i) => toPet(b, s, i));
   const d = fromApi(dogs.data, "dog");
   const c = fromApi(cats.data, "cat");
-  const mixed = Array.from({ length: Math.max(d.length, c.length) }, (_, i) => [d[i], c[i]])
+  const mixed = Array.from({ length: Math.max(d.length, c.length) }, (_, i) => [
+    d[i],
+    c[i],
+  ])
     .flat()
     .filter(Boolean);
   return [...community, ...mixed];
