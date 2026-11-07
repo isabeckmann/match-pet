@@ -8,6 +8,7 @@ const base = {
   strokeLinecap: "round",
   strokeLinejoin: "round",
   "aria-hidden": true,
+  focusable: false,
 } as const;
 
 export const MailIcon = () => (
@@ -35,7 +36,7 @@ export const AlertIcon = () => (
   </svg>
 );
 export const GoogleIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 48 48" aria-hidden="true">
+  <svg width="20" height="20" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
     <path
       fill="#EA4335"
       d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.9 2.4 30.4 0 24 0 14.6 0 6.5 5.4 2.6 13.2l7.9 6.1C12.4 13.6 17.7 9.5 24 9.5Z"
@@ -111,6 +112,7 @@ export const PawIcon = (p: IconProps) => (
 export const Sparks = ({ className }: { className?: string }) => (
   <svg
     aria-hidden="true"
+    focusable="false"
     viewBox="0 0 40 52"
     width="40"
     height="52"
