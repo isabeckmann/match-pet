@@ -50,7 +50,7 @@ export default function UserMenu({
         type="button"
         aria-expanded={open}
         aria-controls="user-menu"
-        aria-label="Menu"
+        aria-label={`Menu da conta de ${name}`}
         onClick={() => setOpen((o) => !o)}
         className="flex h-11 items-center gap-1 rounded-full p-1 pr-2 text-ink hover:bg-white/70"
       >

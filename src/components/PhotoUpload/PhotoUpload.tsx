@@ -131,7 +131,7 @@ export default function PhotoUpload({ onUpload }: PhotoUploadProps) {
         {carregando
           ? "Enviando..."
           : enviada
-            ? "Foto enviada ✓"
+            ? <>Foto enviada <span aria-hidden="true">✓</span></>
             : "Enviar foto"}
       </button>
 

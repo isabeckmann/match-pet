@@ -149,8 +149,12 @@ export default function Discover() {
             <SwipeCard key={`${pet.id}-${attempt}`} exit={exit} onSwipe={swipe} onExited={finish}>
               <DiscoverCard pet={pet}>
                 <div className="flex gap-3 pt-2">
-                  <button onClick={() => swipe("left")} disabled={!!exit} aria-keyshortcuts="ArrowLeft" className={`${btn} bg-emphasis text-ink`}>Passar</button>
-                  <button onClick={() => swipe("right")} disabled={!!exit} aria-keyshortcuts="ArrowRight" className={`${btn} bg-primary-dark text-white`}>Match ♥</button>
+                  <button onClick={() => swipe("left")} disabled={!!exit} aria-keyshortcuts="ArrowLeft" className={`${btn} bg-emphasis text-ink`}>
+                    Passar<span className="sr-only"> {pet.name}</span>
+                  </button>
+                  <button onClick={() => swipe("right")} disabled={!!exit} aria-keyshortcuts="ArrowRight" className={`${btn} bg-primary-dark text-white`}>
+                    Match<span aria-hidden="true"> ♥</span><span className="sr-only"> com {pet.name}</span>
+                  </button>
                 </div>
               </DiscoverCard>
             </SwipeCard>

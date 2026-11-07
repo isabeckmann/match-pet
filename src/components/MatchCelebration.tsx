@@ -85,7 +85,7 @@ export default function MatchCelebration({ pet, onSee, onClose }: Props) {
             </div>
           </div>
           <h2 id="match-title" className="text-4xl font-bold">
-            É um Match! ❤️
+            É um Match! <span aria-hidden="true">❤️</span>
           </h2>
           <p id="match-desc" className="mt-2 text-lg">
             Você e <strong>{pet.name}</strong> podem começar uma linda história

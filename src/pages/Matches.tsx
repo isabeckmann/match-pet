@@ -116,10 +116,10 @@ export default function Matches() {
             <PetCard key={m.id} pet={m} favorite>
               <div className="flex flex-wrap gap-3 pt-1">
                 <button onClick={() => setSelected(m)} className={contactBtn}>
-                  <ChatIcon size={20} /> Contato
+                  <ChatIcon size={20} /> Contato<span className="sr-only"> sobre {m.name}</span>
                 </button>
                 <button onClick={() => setToRemove(m)} className={removeBtn}>
-                  <TrashIcon size={20} /> Remover
+                  <TrashIcon size={20} /> Remover<span className="sr-only"> {m.name} dos matches</span>
                 </button>
               </div>
             </PetCard>
