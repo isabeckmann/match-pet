@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import type { Pet } from "../types/pet";
+import { petPhotoAlt } from "../lib/petAlt";
 import { CakeIcon, HeartIcon, PawIcon, PinIcon, Sparks } from "./icons";
 
 const SIZES = { small: "Pequeno", medium: "Médio", large: "Grande" };
@@ -17,7 +18,7 @@ export default function DiscoverCard({
       <div className="relative mx-2 mt-2 md:mx-0">
         <img
           src={pet.photoUrl}
-          alt={`${pet.species === "dog" ? "Cachorro" : "Gato"} da raça ${pet.breed}`}
+          alt={petPhotoAlt(pet)}
           className="aspect-[16/10] w-full -rotate-3 rounded-2xl border-8 border-white object-cover shadow-lg md:aspect-[4/3]"
         />
         <HeartIcon
@@ -36,13 +37,16 @@ export default function DiscoverCard({
           className="flex flex-wrap gap-x-4 gap-y-1.5 text-base"
         >
           <li className="flex items-center gap-2">
-            <CakeIcon /> {pet.ageYears} {pet.ageYears === 1 ? "ano" : "anos"}
+            <CakeIcon /> <span className="sr-only">Idade: </span>
+            {pet.ageYears} {pet.ageYears === 1 ? "ano" : "anos"}
           </li>
           <li className="flex items-center gap-2">
-            <PawIcon size={20} /> {SIZES[pet.size]}
+            <PawIcon size={20} /> <span className="sr-only">Porte: </span>
+            {SIZES[pet.size]}
           </li>
           <li className="flex items-center gap-2">
-            <PinIcon /> {pet.city}
+            <PinIcon /> <span className="sr-only">Cidade: </span>
+            {pet.city}
           </li>
         </ul>
 

@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import type { Pet } from "../types/pet";
+import { petPhotoAlt } from "../lib/petAlt";
 import { HeartIcon, PawIcon, PinIcon } from "./icons";
 
 const SIZES = { small: "Pequeno", medium: "Médio", large: "Grande" };
@@ -17,7 +18,7 @@ export default function PetCard({ pet, children, favorite }: Props) {
       <div className="relative min-h-52">
         <img
           src={pet.photoUrl}
-          alt={`${pet.species === "dog" ? "Cachorro" : "Gato"} da raça ${pet.breed}`}
+          alt={petPhotoAlt(pet)}
           className="absolute inset-0 h-full w-full rounded-2xl object-cover"
           loading="lazy"
         />
@@ -42,7 +43,10 @@ export default function PetCard({ pet, children, favorite }: Props) {
         </p>
         <p className="flex items-center gap-2">
           <PinIcon className="shrink-0" />
-          <span className="truncate">{pet.city}</span>
+          <span className="truncate">
+            <span className="sr-only">Cidade: </span>
+            {pet.city}
+          </span>
         </p>
         <ul className="flex flex-wrap gap-1.5" aria-label="Personalidade">
           {pet.temperament.map((t) => (
